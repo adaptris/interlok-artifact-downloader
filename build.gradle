@@ -8,7 +8,7 @@ ext {
   slf4jVersion = "1.7.25"
   springBootVersion = "2.0.5.RELEASE"
   jacksonVersion = "2.9.7"
-  swaggerVersion = "1.5.18"
+  swaggerVersion = "1.5.21"
   ivyVersion = "2.4.0"
 }
 
