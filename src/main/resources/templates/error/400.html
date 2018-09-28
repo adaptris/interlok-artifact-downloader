@@ -1,0 +1,62 @@
+<!doctype html>
+  <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+  <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+  <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>Interlok Artifact Downloader - 400 - Bad Request</title>
+    <meta name="description" content="Interlok Artifact Downloader - 400 - Bad Request"/>
+    <meta name="author" content="Adaptris Ltd"/>
+    
+    <meta name="viewport" content="width=device-width"/>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/font-awesome/css/adaptris-font-awesome.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/global.css}" rel="stylesheet"></link>
+    
+    <link th:href="@{/favicon.ico}" rel="icon" type="image/x-icon" />
+  </head>
+  <body>
+    <div>
+      <header class="mb-4">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#">
+            <img th:src="@{/img/logo.png}" width="30" height="30" class="d-inline-block align-top" alt="Interlok Logo"/>
+            <span>Interlok Artifact Downloader</span>
+          </a>
+        </nav>
+      </header>
+      
+      <section id="main" class="mb-4">
+        <div class="container">
+          <div class="row justify-content-md-center">
+            <div class="col align-self-center">
+              <div class="card">
+                <h2 class="card-header">
+                  Sorry!
+                </h2>
+                <div class="card-body">
+                  <h5 class="card-title"><i class="fa fa-exclamation-circle"></i>&nbsp;<span class="text-muted">400</span> - Bad Request</h5>
+                  <p class="card-text">Error 400 : The request was incorrect</p>
+                  <a th:href="@{/}" class="card-link">Home</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <footer class="mb-4">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a target="_new" data-bind="attr: {href: doc.adpBase}" href="http://www.adaptris.com/">
+            &copy;&nbsp;Adaptris Limited <span class="copyright-date"></span>
+          </a>
+        </nav>
+      </footer>
+    </div>
+    
+    <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,140 @@
+ext {
+  nexusBaseUrl = project.hasProperty("nexusBaseUrl") ? project.getProperty("nexusBaseUrl") : "https://development.adaptris.net/nexus"
+  repoUsername = project.hasProperty("repoUsername") ? project.getProperty("repoUsername") : "unknown"
+  repoPassword = project.hasProperty("repoPassword") ? project.getProperty("repoPassword") : "unknown"
+  componentName = "Interlok Artifact Downloader"
+  organizationName = "Adaptris Ltd"
+  organizationUrl = "https://www.adaptris.com"
+  slf4jVersion = "1.7.25"
+  springBootVersion = "2.0.5.RELEASE"
+  jacksonVersion = "2.9.7"
+  swaggerVersion = "1.5.18"
+  ivyVersion = "2.4.0"
+}
+
+buildscript {
+  ext {
+    springBootVersion = "2.0.5.RELEASE"
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+  }
+}
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "jacoco"
+apply plugin: "eclipse"
+apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
+
+run.enabled = false
+distTar.enabled=false
+distZip.enabled=false
+
+sourceCompatibility = 1.8
+group   = "com.adaptris"
+version = "1.0-SNAPSHOT" // Should we follow interlok versions?
+
+repositories {
+  mavenCentral()
+  maven { url "$nexusBaseUrl/content/groups/public" }
+  maven {
+    credentials {
+      username repoUsername
+      password repoPassword
+    }
+    url "$nexusBaseUrl/content/groups/private"
+  }
+  maven { url "$nexusBaseUrl/content/repositories/snapshots" }
+  maven { url "$nexusBaseUrl/content/repositories/releases" }
+}
+
+eclipse {
+  classpath {
+    downloadJavadoc = true
+    downloadSources = true
+  }
+}
+
+configurations {
+  compile {
+    exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    exclude group: "org.springframework.boot", module: "spring-boot-starter-data-jpa"
+  }
+}
+
+// Use static classpath resources (i.e. in src/main/resources by default) in the live application when running bootRun.
+bootRun {
+  sourceResources sourceSets.main
+}
+
+jar {
+  baseName = rootProject.name
+  version =  version
+  manifest {
+    attributes "Built-By": System.getProperty("user.name"),
+               "Build-Jdk": System.getProperty("java.version"),
+               "Implementation-Title": componentName,
+               "Implementation-Version": project.version,
+               "Implementation-Vendor-Id": project.group,
+               "Implementation-Vendor": organizationName,
+               "Implementation-URL": organizationUrl
+  }
+}
+
+sourceSets {
+  test.compileClasspath += configurations.compileOnly
+  test.runtimeClasspath += configurations.compileOnly
+}
+
+dependencies {
+  compile "org.springframework.boot:spring-boot-devtools"
+  compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+  compile "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
+  compile("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
+  compile "org.springframework.boot:spring-boot-starter-jersey:$springBootVersion"
+  
+  compile "com.google.guava:guava:26.0-jre"
+  
+  compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+  compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+  compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
+  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:$jacksonVersion"
+  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
+  compile "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion"
+  
+  compile "io.swagger:swagger-core:$swaggerVersion"
+  compile "io.swagger:swagger-jersey2-jaxrs:$swaggerVersion"
+  
+  compile "org.apache.commons:commons-lang3:3.7"
+  compile "commons-io:commons-io:2.6"
+  
+  compile "org.apache.ivy:ivy:$ivyVersion"
+  
+  testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+  testCompile "org.hamcrest:hamcrest-core:1.3"
+  testCompile "junit:junit:4.12"
+  testCompile "org.mockito:mockito-all:1.10.19"
+}
+
+startScripts {
+  mainClassName = "com.adaptris.downloader.Application"
+}
+
+jacoco {
+  toolVersion="0.8.1"
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    html.enabled true
+  }
+}
+
+check.dependsOn jacocoTestReport

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="60" shutdownHook="disable">
+  <Appenders>
+
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout>
+        <Pattern>%-5p [%t] [%c{1}] %m%n</Pattern>
+      </PatternLayout>
+    </Console>
+    
+    <!-- Example but not used in this config -->
+    <RollingFile name="RollingFile" fileName="interlok-artifact-downloader.log" filePattern="interlok-artifact-downloader.log.%i" createOnDemand="true">
+      <PatternLayout>
+        <Pattern>%d{ISO8601} %-5p [%t] [%c] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <OnStartupTriggeringPolicy />
+        <!-- <TimeBasedTriggeringPolicy /> -->
+        <SizeBasedTriggeringPolicy size="10 MB"/>
+      </Policies>
+      <!-- fileIndex == min means that .1 is always the "newest" of the rolled-over files -->
+      <DefaultRolloverStrategy max="9" fileIndex="min"/>
+    </RollingFile>
+    
+  </Appenders>
+  <Loggers>
+
+    <Logger name="org" level="WARN"/>
+    <Logger name="io" level="WARN"/>
+    <Logger name="net" level="WARN"/>
+    <Logger name="com" level="WARN"/>
+    <Logger name="org.springframework" level="WARN"/>
+    <Logger name="org.apache" level="WARN"/>
+    <Logger name="org.hibernate.validator" level="WARN"/>
+    <Logger name="com.sun.jersey" level="WARN"/>
+    <Logger name="com.adaptris.downloader" level="INFO"/>
+    <Logger name="com.adaptris.downloader.Application" level="INFO"/>
+
+    <Root level="TRACE">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
