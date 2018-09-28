@@ -1,3 +1,5 @@
+# interlok-artifact-downloader [![GitHub tag](https://img.shields.io/github/tag/adaptris/interlok-artifact-downloader.svg)](https://github.com/adaptris/interlok-artifact-downloader/tags) [![Build Status](https://travis-ci.org/adaptris/interlok-artifact-downloader.svg?branch=develop)](https://travis-ci.org/adaptris/interlok-artifact-downloader) [![codecov](https://codecov.io/gh/adaptris/interlok-artifact-downloader/branch/develop/graph/badge.svg)](https://codecov.io/gh/adaptris/interlok-artifact-downloader)
+
 Helper application that allows you to download Interlok artifacts from a nexus server.
 
 ## Build
