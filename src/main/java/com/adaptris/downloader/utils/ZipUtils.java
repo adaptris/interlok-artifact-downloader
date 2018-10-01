@@ -13,12 +13,13 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipUtils {
 
-  private ZipUtils() {}
-
   private static final int EOF = -1;
   private static final int BUFFER_SIZE = 1024;
 
   public final static String ZIP = ".zip";
+
+  private ZipUtils() {
+  }
 
   /**
    * Zip the file list into a ByteArrayOutputStream

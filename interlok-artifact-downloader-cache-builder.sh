@@ -26,7 +26,7 @@ function download()
   echo "### Resolve optional components and dependencies"
   
   # COMPONENTS=interlok-amqp interlok-apache-http interlok-as2 interlok-xml-security
-  COMPONENTS=`cat optional-projects.list`
+  COMPONENTS=$(cat optional-projects.list)
   for c in $COMPONENTS
   do
     # Remove end of line
@@ -37,7 +37,7 @@ function download()
     else
       command="curl -X GET --output $DOWNLOAD_DIR/$c-$VERSION.zip --header 'Accept:application/zip' --header 'Content-Type:application/json' $DOWNLOADER_URL/api/artifacts/com.adaptris/$c/$VERSION --fail --silent --show-error"
       echo "Download $DOWNLOADER_URL/api/artifacts/com.adaptris/$c/$VERSION"
-      `$command`
+      ${command}
     fi
 	echo -----
   done

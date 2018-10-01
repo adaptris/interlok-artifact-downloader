@@ -1,13 +1,13 @@
 var app = new Vue({
-  el: '#app',
+  el: "#app",
   data: function () {
     return {
       errors: {},
       downloadMessage: null,
       loading: false,
       group: "com.adaptris",
-	  artifact: null,
-	  version: null
+      artifact: null,
+      version: null
     }
   },
   computed: {
@@ -17,19 +17,19 @@ var app = new Vue({
       var self = this;
       event.preventDefault();
       if (self.validate(event)){
-    	self.loading = true;
-    	self.downloadMessage = "Resolving artifacts, this may take some time..."
+        self.loading = true;
+        self.downloadMessage = "Resolving artifacts, this may take some time...";
         adp.ws.artifactResolve(self.group, self.artifact, self.version).done(function(data) {
           self.downloadMessage = (data.dependencies.length + 1) + " artifacts resolved, the zip download will start shortly...";
           adp.ws.artifactDownload(self.group, self.artifact, self.version);
-		}).fail(function(error) {
-		  self.downloadMessage = null;
+        }).fail(function(error) {
+          self.downloadMessage = null;
           console.log(error);
           if (error && error.responseJSON) {
-        	  self.errors["global"] = error.responseJSON.message;
+              self.errors["global"] = error.responseJSON.message;
           }
         }).always(function() {
-    	  self.loading = false;
+          self.loading = false;
         });
       }
     },
@@ -50,7 +50,7 @@ var app = new Vue({
       }
     },
     getError: function(property) {
-    	return this.errors[property];
+        return this.errors[property];
     },
     hasError: function(property) {
       return this.getError(property) != undefined;
