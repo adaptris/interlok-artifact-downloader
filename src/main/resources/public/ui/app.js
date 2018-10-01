@@ -24,7 +24,7 @@ var app = new Vue({
           adp.ws.artifactDownload(self.group, self.artifact, self.version);
         }).fail(function(error) {
           self.downloadMessage = null;
-          console.log(error);
+          // console.log(error);
           if (error && error.responseJSON) {
               self.errors["global"] = error.responseJSON.message;
           }
@@ -53,7 +53,7 @@ var app = new Vue({
         return this.errors[property];
     },
     hasError: function(property) {
-      return this.getError(property) != undefined;
+      return this.getError(property) != null;
     }
   }
-})
+});

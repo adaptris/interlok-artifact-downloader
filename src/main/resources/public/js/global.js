@@ -42,7 +42,7 @@ var adp = adp || {};
     adp.ws.artifactResolve = function(group, artifact, version) {
         return $.ajax({
             url: adp.url.artifacts + "/" + group + "/" + artifact + "/" + version + "/resolve",
-            type: 'GET',
+            type: "GET",
             dataType: "json",
             contentType: "application/json"
         });

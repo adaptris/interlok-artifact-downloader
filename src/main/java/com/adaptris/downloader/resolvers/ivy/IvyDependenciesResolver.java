@@ -109,12 +109,12 @@ public class IvyDependenciesResolver implements DependenciesResolver {
       dependencyFiles.addAll(FileUtils.listFiles(retrievedDir, FILE_EXTENSIONS, false));
 
       return dependencyFiles;
-    } catch (IOException | java.text.ParseException expts) {
+    } catch (IOException | ParseException expts) {
       throw new DependenciesResolverException(expts);
     }
   }
 
-  void initMessageLogger() {
+  protected final void initMessageLogger() {
     int ivyLogLevel = IvyLogLevel.valueOrError(properties.getResolverLogLevel()).getLevel();
     Message.setDefaultLogger(new DefaultMessageLogger(ivyLogLevel));
   }
@@ -153,7 +153,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
     }
   }
 
-  void addRepos(String repoUrl, IvySettings ivySettings) {
+  protected final void addRepos(String repoUrl, IvySettings ivySettings) {
     ChainResolver chainResolver = new ChainResolver();
     chainResolver.setName("chain");
 
@@ -198,7 +198,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
     return resolver;
   }
 
-  void addExcludes(DefaultDependencyDescriptor dd, String... excludes) {
+  protected final void addExcludes(DefaultDependencyDescriptor dd, String... excludes) {
     for (String exclude : excludes) {
       String[] split = exclude.split(":");
       String org = StringUtils.trimToEmpty(split[0]);
@@ -220,7 +220,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
   }
 
   @SuppressWarnings("unchecked")
-  void handleErrors(ResolveReport report) throws DependenciesResolverException {
+  protected final void handleErrors(ResolveReport report) throws DependenciesResolverException {
     if (report.hasError()) {
       List<String> dependencyErrors = new ArrayList<>(report.getProblemMessages());
 
