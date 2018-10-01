@@ -110,7 +110,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
 
       return dependencyFiles;
     } catch (IOException | ParseException expts) {
-      throw new DependenciesResolverException(expts);
+      throw new DependenciesResolverException("Failed to resolve artifacts for " + groupId + ":" + artifactId + ":" + version, expts);
     }
   }
 

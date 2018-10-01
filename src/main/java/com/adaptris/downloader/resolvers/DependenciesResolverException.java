@@ -31,16 +31,6 @@ public class DependenciesResolverException extends Exception {
 
   /**
    * <p>
-   * Creates a new instance with a description of the <code>Exception</code>.
-   * </p>
-   * @param description description of the <code>Exception</code>
-   */
-  public DependenciesResolverException(String description) {
-    super(description);
-  }
-
-  /**
-   * <p>
    * Creates a new instance with a reference to a previous <code>Exception</code> and a description
    * of the <code>Exception</code>.
    * </p>

@@ -195,7 +195,7 @@ public class ArtifactController {
     try {
       return ZipUtils.zipFileList(artifacts);
     } catch (IOException expts) {
-      throw new ArtifactDownloaderException(expts);
+      throw new ArtifactDownloaderException("Failed to zip files", expts);
     }
   }
 
