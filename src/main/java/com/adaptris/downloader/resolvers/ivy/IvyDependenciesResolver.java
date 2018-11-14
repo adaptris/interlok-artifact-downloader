@@ -156,6 +156,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
   protected final void addRepos(String repoUrl, IvySettings ivySettings) {
     ChainResolver chainResolver = new ChainResolver();
     chainResolver.setName("chain");
+    chainResolver.setCheckmodified(true);
 
     // Add maven central repo
     addM2Resolver(chainResolver, MAVEN_CENTRAL_BASE_URL, "central");
@@ -193,6 +194,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
     // resolver.setUsepoms(true);
     resolver.setRoot(url);
     resolver.setName(name);
+    resolver.setCheckmodified(true);
     // resolver.setForce(true);
     // resolver.setAlwaysCheckExactRevision(true);
     return resolver;
