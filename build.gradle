@@ -6,7 +6,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
   slf4jVersion = "1.7.25"
-  springBootVersion = "2.1.0.RELEASE"
+  springBootVersion = "2.1.1.RELEASE"
   jacksonVersion = "2.9.7"
   swaggerVersion = "1.5.21"
   ivyVersion = "2.4.0"
@@ -14,7 +14,7 @@ ext {
 
 buildscript {
   ext {
-    springBootVersion = "2.1.0.RELEASE"
+    springBootVersion = "2.1.1.RELEASE"
   }
   repositories {
     mavenCentral()
