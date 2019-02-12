@@ -48,6 +48,8 @@ public class ArtifactController {
   private static final String ARTIFACT_DESC = "Artifact name";
   private static final String VERSION = "version";
   private static final String VERSION_DESC = "Artifact version";
+  private static final String OPTIONAL = "optional";
+  private static final String OPTIONAL_DESC = "Add optional dependencies";
   private static final String EXCLUDES = "excludes";
   private static final String EXCLUDES_DESC = "List of artifact to exclude separated with a comma";
 
@@ -74,10 +76,11 @@ public class ArtifactController {
       @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
       @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
       @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
+      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
       @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
           throws ArtifactDownloaderException {
 
-    ArtifactAndDependendencies doResolve = doResolve(group, artifact, version, excludes);
+    ArtifactAndDependendencies doResolve = doResolve(group, artifact, version, optional, excludes);
     return doResolve;
   }
 
@@ -90,15 +93,15 @@ public class ArtifactController {
       @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
       @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
       @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = EXCLUDES,
-      value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
+      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
       @Suspended final AsyncResponse asyncResponse) throws ArtifactDownloaderException {
 
     new Thread(new Runnable() {
       @Override
       public void run() {
         try {
-          ArtifactAndDependendencies result = doResolve(group, artifact, version, excludes);
+          ArtifactAndDependendencies result = doResolve(group, artifact, version, optional, excludes);
           asyncResponse.resume(result);
         } catch (ArtifactDownloaderException | ClientErrorException expts) {
           asyncResponse.resume(expts);
@@ -116,10 +119,11 @@ public class ArtifactController {
       @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
       @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
       @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
+      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
       @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
           throws ArtifactDownloaderException {
 
-    Response doDownload = doDownload(group, artifact, version, excludes);
+    Response doDownload = doDownload(group, artifact, version, optional, excludes);
     return doDownload;
   }
 
@@ -131,8 +135,8 @@ public class ArtifactController {
   public void downloadAsync(@ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
       @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
       @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = EXCLUDES,
-      value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
+      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
       @Suspended final AsyncResponse asyncResponse)
           throws ArtifactDownloaderException {
 
@@ -140,7 +144,7 @@ public class ArtifactController {
       @Override
       public void run() {
         try {
-          Response result = doDownload(group, artifact, version, excludes);
+          Response result = doDownload(group, artifact, version, optional, excludes);
           asyncResponse.resume(result);
         } catch (ArtifactDownloaderException | ClientErrorException expts) {
           asyncResponse.resume(expts);
@@ -149,10 +153,10 @@ public class ArtifactController {
     }).start();
   }
 
-  private ArtifactAndDependendencies doResolve(String group, String artifact, String version, List<String> excludes)
+  private ArtifactAndDependendencies doResolve(String group, String artifact, String version, boolean optional, List<String> excludes)
       throws ArtifactDownloaderException {
     try {
-      List<File> artifacts = artifactServiceDownload(group, artifact, version, excludes);
+      List<File> artifacts = artifactServiceDownload(group, artifact, version, optional, excludes);
 
       ArtifactAndDependendencies artifactAndDependendencies = new ArtifactAndDependendencies();
       for (File artifactFile : artifacts) {
@@ -171,9 +175,10 @@ public class ArtifactController {
     }
   }
 
-  private Response doDownload(String group, String artifact, String version, List<String> excludes) throws ArtifactDownloaderException {
+  private Response doDownload(String group, String artifact, String version, boolean optional, List<String> excludes)
+      throws ArtifactDownloaderException {
     try {
-      List<File> artifacts = artifactServiceDownload(group, artifact, version, excludes);
+      List<File> artifacts = artifactServiceDownload(group, artifact, version, optional, excludes);
 
       ByteArrayOutputStream baos = buildZip(artifacts);
       return buildZipResponse(baos.toByteArray(), artifact + "-" + version);
@@ -184,10 +189,10 @@ public class ArtifactController {
     }
   }
 
-  private List<File> artifactServiceDownload(String group, String artifact, String version, List<String> excludes)
+  private List<File> artifactServiceDownload(String group, String artifact, String version, boolean optional, List<String> excludes)
       throws ArtifactDownloaderException {
     String excludesStr = String.join(",", excludes);
-    List<File> artifacts = artifactService.download(group, artifact, version, null, excludesStr);
+    List<File> artifacts = artifactService.download(group, artifact, version, null, optional, excludesStr);
     return artifacts;
   }
 

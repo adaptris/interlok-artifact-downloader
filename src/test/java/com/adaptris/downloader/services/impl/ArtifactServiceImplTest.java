@@ -60,28 +60,28 @@ public class ArtifactServiceImplTest {
   public void testDownload() throws DependenciesResolverException, ArtifactDownloaderException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(Collections.singletonList(new File(GROUP_ARTIFACT_VERSION))).when(dependenciesResolver)
-    .resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    .resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, null);
+    List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
 
     Assert.assertEquals(1, artifacts.size());
     Assert.assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadWithExcludes() throws DependenciesResolverException, ArtifactDownloaderException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(Collections.singletonList(new File(GROUP_ARTIFACT_VERSION))).when(dependenciesResolver).resolveArtifacts(
-        GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+        GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, EXCLUDE_ARTIFACT);
+    List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, false, EXCLUDE_ARTIFACT);
 
     Assert.assertEquals(1, artifacts.size());
     Assert.assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
@@ -91,12 +91,12 @@ public class ArtifactServiceImplTest {
 
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doThrow(new DependenciesResolverException(new IOException("error"))).when(dependenciesResolver).resolveArtifacts(GROUP,
-        ARTIFACT, VERSION, null, getCacheDir());
+        ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, null);
+    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -107,9 +107,9 @@ public class ArtifactServiceImplTest {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download("com.invalid", ARTIFACT, VERSION, null, null);
+    artifactService.download("com.invalid", ARTIFACT, VERSION, null, false, null);
 
-    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -120,9 +120,9 @@ public class ArtifactServiceImplTest {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download("com.adaptrisinvalid", ARTIFACT, VERSION, null, null);
+    artifactService.download("com.adaptrisinvalid", ARTIFACT, VERSION, null, false, null);
 
-    verify(dependenciesResolver, never()).resolveArtifacts("com.adaptrisinvalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.adaptrisinvalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -134,12 +134,12 @@ public class ArtifactServiceImplTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT,
-        VERSION, null, getCacheDir());
+        VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, null);
+    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -151,12 +151,12 @@ public class ArtifactServiceImplTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("download failed: com.adaptris:artifact:version");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT,
-        VERSION, null, getCacheDir());
+        VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, null);
+    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   private String getCacheDir() {

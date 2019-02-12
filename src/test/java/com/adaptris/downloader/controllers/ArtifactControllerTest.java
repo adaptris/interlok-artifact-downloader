@@ -89,28 +89,28 @@ public class ArtifactControllerTest {
   @Test
   public void testResolveSync() throws ArtifactDownloaderException, DependenciesResolverException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
-    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    ArtifactAndDependendencies artifactAndDependendencies = artifactController.resolveSync(GROUP, ARTIFACT, VERSION,
+    ArtifactAndDependendencies artifactAndDependendencies = artifactController.resolveSync(GROUP, ARTIFACT, VERSION, false,
         Collections.emptyList());
 
     assertValidArtifactAndDependendencies(artifactAndDependendencies);
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testResolveSyncWithExcludes() throws ArtifactDownloaderException, DependenciesResolverException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(),
-        EXCLUDE_ARTIFACT);
+        false, EXCLUDE_ARTIFACT);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    ArtifactAndDependendencies artifactAndDependendencies = artifactController.resolveSync(GROUP, ARTIFACT, VERSION,
+    ArtifactAndDependendencies artifactAndDependendencies = artifactController.resolveSync(GROUP, ARTIFACT, VERSION, false,
         Collections.singletonList(EXCLUDE_ARTIFACT));
 
     assertValidArtifactAndDependendencies(artifactAndDependendencies);
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
@@ -122,11 +122,11 @@ public class ArtifactControllerTest {
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
-        VERSION, null, "");
+        VERSION, null, false, "");
 
-    artifactController.resolveSync("invalid.group", ARTIFACT, VERSION, Collections.emptyList());
+    artifactController.resolveSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
 
-    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -140,23 +140,23 @@ public class ArtifactControllerTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
-        getCacheDir());
+        getCacheDir(), false);
 
-    artifactController.resolveSync(GROUP, ARTIFACT, VERSION, Collections.emptyList());
+    artifactController.resolveSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testResolveAsync()
       throws ArtifactDownloaderException, DependenciesResolverException, InterruptedException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
-    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
@@ -168,18 +168,18 @@ public class ArtifactControllerTest {
         return true;
       }
     }));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testResolveAsyncWithExcludes() throws ArtifactDownloaderException, DependenciesResolverException, InterruptedException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
-    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, Collections.singletonList(EXCLUDE_ARTIFACT), asyncResponse);
+    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, false, Collections.singletonList(EXCLUDE_ARTIFACT), asyncResponse);
 
     Thread.sleep(400);
 
@@ -191,7 +191,7 @@ public class ArtifactControllerTest {
         return true;
       }
     }));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
@@ -200,17 +200,17 @@ public class ArtifactControllerTest {
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
-        VERSION, null, "");
+        VERSION, null, false, "");
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.resolveAsync("invalid.group", ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.resolveAsync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(DownloaderClientErrorException.class));
     verify(asyncResponse).resume(argThat(new ThrowableMessageMatcher<>(new StringContains("HTTP 400 Bad Request"))));
-    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -222,44 +222,44 @@ public class ArtifactControllerTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
-        getCacheDir());
+        getCacheDir(), false);
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.resolveAsync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(DownloaderClientErrorException.class));
     verify(asyncResponse).resume(argThat(new ThrowableMessageMatcher<>(new StringContains("HTTP 404 Not Found"))));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadSync() throws ArtifactDownloaderException, DependenciesResolverException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
-    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    Response response = artifactController.downloadSync(GROUP, ARTIFACT, VERSION, Collections.emptyList());
+    Response response = artifactController.downloadSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
 
     assertValidResponse(response);
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadSyncWithExcludes() throws ArtifactDownloaderException, DependenciesResolverException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(),
-        EXCLUDE_ARTIFACT);
+        false, EXCLUDE_ARTIFACT);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    Response response = artifactController.downloadSync(GROUP, ARTIFACT, VERSION, Collections.singletonList(EXCLUDE_ARTIFACT));
+    Response response = artifactController.downloadSync(GROUP, ARTIFACT, VERSION, false, Collections.singletonList(EXCLUDE_ARTIFACT));
 
     assertValidResponse(response);
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
@@ -271,11 +271,11 @@ public class ArtifactControllerTest {
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
-        VERSION, null, "");
+        VERSION, null, false, "");
 
-    artifactController.downloadSync("invalid.group", ARTIFACT, VERSION, Collections.emptyList());
+    artifactController.downloadSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
 
-    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -289,23 +289,23 @@ public class ArtifactControllerTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
-        getCacheDir());
+        getCacheDir(), false);
 
-    artifactController.downloadSync(GROUP, ARTIFACT, VERSION, Collections.emptyList());
+    artifactController.downloadSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
 
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadAsync()
       throws ArtifactDownloaderException, DependenciesResolverException, InterruptedException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
-    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
@@ -317,7 +317,7 @@ public class ArtifactControllerTest {
         return true;
       }
     }));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -325,12 +325,12 @@ public class ArtifactControllerTest {
       throws ArtifactDownloaderException, DependenciesResolverException, InterruptedException, URISyntaxException {
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(getDependencyFiles()).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(),
-        EXCLUDE_ARTIFACT);
+        false, EXCLUDE_ARTIFACT);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, Collections.singletonList(EXCLUDE_ARTIFACT), asyncResponse);
+    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, false, Collections.singletonList(EXCLUDE_ARTIFACT), asyncResponse);
 
     Thread.sleep(400);
 
@@ -342,7 +342,7 @@ public class ArtifactControllerTest {
         return true;
       }
     }));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), EXCLUDE_ARTIFACT);
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
@@ -351,18 +351,18 @@ public class ArtifactControllerTest {
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
-        VERSION, null, "");
+        VERSION, null, false, "");
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.downloadAsync("invalid.group", ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.downloadAsync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(BadRequestException.class));
     verify(asyncResponse).resume(argThat(new ThrowableMessageMatcher<>(
         new StringContains("[invalid.group] is not a valid group Id. It need to start with [com.adaptris]"))));
-    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
@@ -374,18 +374,18 @@ public class ArtifactControllerTest {
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
-        getCacheDir());
+        getCacheDir(), false);
 
     AsyncResponse asyncResponse = mock(AsyncResponse.class);
 
-    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, Collections.emptyList(), asyncResponse);
+    artifactController.downloadAsync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList(), asyncResponse);
 
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(NotFoundException.class));
     verify(asyncResponse).resume(argThat(new ThrowableMessageMatcher<>(
         new StringContains("Artifact could not be resolved"))));
-    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir());
+    verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   private String getCacheDir() {

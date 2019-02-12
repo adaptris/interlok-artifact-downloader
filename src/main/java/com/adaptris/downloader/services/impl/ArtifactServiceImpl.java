@@ -36,7 +36,7 @@ public class ArtifactServiceImpl implements ArtifactService {
   private DependenciesResolverFactory dependenciesResolverFactory;
 
   @Override
-  public List<File> download(String groupId, String artifactId, String version, String url, String excludes)
+  public List<File> download(String groupId, String artifactId, String version, String url, boolean optional, String excludes)
       throws ArtifactDownloaderException {
     validateGroupId(groupId);
     try {
@@ -44,7 +44,7 @@ public class ArtifactServiceImpl implements ArtifactService {
 
       List<String> excludesList = buildExcludesList(excludes);
 
-      return resolveArtifacts(groupId, artifactId, version, url, properties.getDestination(), excludesList);
+      return resolveArtifacts(groupId, artifactId, version, url, properties.getDestination(), optional, excludesList);
     } catch (DependenciesResolverException dre) {
       if (dre.hasUnresolvedDependencyNotFound(groupId, artifactId, version)) {
         throw new ArtifactUnresolvedDownloaderException("Artifact could not be resolved");
@@ -71,12 +71,12 @@ public class ArtifactServiceImpl implements ArtifactService {
   }
 
   private List<File> resolveArtifacts(String groupId, String artifactId, String version, String repoUrl, String destination,
-      List<String> excludes) throws DependenciesResolverException {
+      boolean optional, List<String> excludes) throws DependenciesResolverException {
     DependenciesResolver dependenciesResolver = dependenciesResolverFactory.getResolver();
     String cacheDir = destination + File.separator + INTERLOK_ARTIFACT_CACHE;
 
     List<File> artifactFiles = dependenciesResolver.resolveArtifacts(groupId, artifactId, version, repoUrl, cacheDir,
-        excludes.toArray(new String[excludes.size()]));
+        optional, excludes.toArray(new String[excludes.size()]));
 
     log.debug("Artifact files: [{}]", artifactFiles);
     return artifactFiles;

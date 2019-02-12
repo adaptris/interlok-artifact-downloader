@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ivy.Ivy;
+import org.apache.ivy.core.module.descriptor.Configuration;
+import org.apache.ivy.core.module.descriptor.Configuration.Visibility;
 import org.apache.ivy.core.module.descriptor.DefaultDependencyDescriptor;
 import org.apache.ivy.core.module.descriptor.DefaultExcludeRule;
 import org.apache.ivy.core.module.descriptor.DefaultModuleDescriptor;
@@ -46,6 +49,55 @@ public class IvyDependenciesResolver implements DependenciesResolver {
   private static final String ASTERISK = "*";
   private static final String[] FILE_EXTENSIONS = new String[] {"jar", "war", "dll", "lic"};
 
+
+  /*
+  <conf name="master" visibility="public" description="contains only the artifact published by this module itself, with no transitive dependencies"/>
+  <conf name="compile" visibility="public" description="this is the default scope, used if none is specified. Compile dependencies are available in all classpaths."/>
+  <conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
+  <conf name="provided" visibility="public" description="this is much like compile, but indicates you expect the JDK or a container to provide it. It is only available on the compilation classpath, and is not transitive."/>
+  <conf name="runtime" visibility="public" description="this scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath." extends="compile"/>
+  <conf name="test" visibility="private" description="this scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases." extends="runtime"/>
+  <conf name="system" visibility="public" description="this scope is similar to provided except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository."/>
+  <conf name="sources" visibility="public" description="this configuration contains the source artifact of this module, if any."/>
+  <conf name="javadoc" visibility="public" description="this configuration contains the javadoc artifact of this module, if any."/>
+  <conf name="optional" visibility="public" description="contains all optional dependencies">
+   */
+
+  private static final String CONF_MASTER_NAME = "master";
+
+  private static final Configuration CONF_MASTER = new Configuration(CONF_MASTER_NAME, Visibility.PUBLIC, "Master dependencies",
+      new String[] {}, false, null);
+
+  private static final String CONF_COMPILE_NAME = "compile";
+
+  private static final Configuration CONF_COMPILE = new Configuration(CONF_COMPILE_NAME, Visibility.PUBLIC, "Compile dependencies",
+      new String[] {}, false, null);
+
+  private static final String CONF_RUNTIME_NAME = "runtime";
+
+  private static final Configuration CONF_RUNTIME = new Configuration(CONF_RUNTIME_NAME, Visibility.PUBLIC, "Compile dependencies",
+      new String[] { CONF_COMPILE_NAME }, false, null);
+
+  private static final String CONF_DEFAULT_NAME = "default";
+
+  private static final Configuration CONF_DEFAULT = new Configuration(CONF_DEFAULT_NAME, Visibility.PUBLIC, "Default dependencies",
+      new String[] { CONF_RUNTIME_NAME, CONF_MASTER_NAME }, true, null);
+
+  private static final String CONF_PROVIDED_NAME = "provided";
+
+  private static final Configuration CONF_PROVIDED = new Configuration(CONF_PROVIDED_NAME, Visibility.PUBLIC, "Provided dependencies",
+      new String[] {}, false, null);
+
+  private static final String CONF_TEST_NAME = "test";
+
+  private static final Configuration CONF_TEST = new Configuration(CONF_TEST_NAME, Visibility.PRIVATE, "Test dependencies",
+      new String[] { CONF_RUNTIME_NAME }, false, null);
+
+  private static final String CONF_OPTIONAL_NAME = "optional";
+
+  private static final Configuration CONF_OPTIONAL = new Configuration(CONF_OPTIONAL_NAME, Visibility.PUBLIC, "Optional dependencies",
+      new String[] {}, true, null);
+
   private final DependenciesResolverProperties properties;
 
   public IvyDependenciesResolver(DependenciesResolverProperties properties) {
@@ -53,7 +105,7 @@ public class IvyDependenciesResolver implements DependenciesResolver {
   }
 
   @Override
-  public List<File> resolveArtifacts(String groupId, String artifactId, String version, String repoUrl, String cacheDir, String... excludes)
+  public List<File> resolveArtifacts(String groupId, String artifactId, String version, String repoUrl, String cacheDir, boolean addOptional, String... excludes)
       throws DependenciesResolverException {
 
     log.info("Trying to resolve artifact {}:{}:{}", groupId, artifactId, version);
@@ -71,7 +123,10 @@ public class IvyDependenciesResolver implements DependenciesResolver {
 
       log.debug(ivySettings.getDefaultResolver().toString());
 
-      String[] confs = new String[] {"default"};
+      String[] confs = new String[] { CONF_DEFAULT_NAME, CONF_COMPILE_NAME };
+      if (addOptional) {
+        confs = ArrayUtils.add(confs, CONF_OPTIONAL_NAME);
+      }
 
       // Ivy config
 
@@ -79,11 +134,23 @@ public class IvyDependenciesResolver implements DependenciesResolver {
       DefaultModuleDescriptor moduleDescriptor =
           DefaultModuleDescriptor.newDefaultInstance(ModuleRevisionId.newInstance(groupId, artifactId + "-caller", "working"));
 
+      // Add the module configurations
+      moduleDescriptor.addConfiguration(CONF_MASTER);
+      moduleDescriptor.addConfiguration(CONF_COMPILE);
+      moduleDescriptor.addConfiguration(CONF_RUNTIME);
+      moduleDescriptor.addConfiguration(CONF_DEFAULT);
+      moduleDescriptor.addConfiguration(CONF_PROVIDED);
+      moduleDescriptor.addConfiguration(CONF_TEST);
+      moduleDescriptor.addConfiguration(CONF_OPTIONAL);
+
+      moduleDescriptor.setDefaultConf(CONF_COMPILE_NAME);
+      moduleDescriptor.setDefaultConfMapping(ModuleDescriptor.DEFAULT_CONFIGURATION);
+
       // Second add dependencies for what we are really looking for
       DefaultDependencyDescriptor dependencyDescriptor =
           new DefaultDependencyDescriptor(moduleDescriptor, ModuleRevisionId.newInstance(groupId, artifactId, version), false, false, true);
       for (int i = 0; i < confs.length; i++) {
-        dependencyDescriptor.addDependencyConfiguration("default", confs[i]);
+        dependencyDescriptor.addDependencyConfiguration(confs[i], confs[i]);
       }
       addExcludes(dependencyDescriptor, excludes);
       moduleDescriptor.addDependency(dependencyDescriptor);
@@ -209,7 +276,9 @@ public class IvyDependenciesResolver implements DependenciesResolver {
         name = StringUtils.defaultString(split[1], ASTERISK);
       }
       ArtifactId excludeArtifactId = new ArtifactId(new ModuleId(org, name), ASTERISK, ASTERISK, ASTERISK);
-      dd.addExcludeRule("default", new DefaultExcludeRule(excludeArtifactId, new IvyMavenLikePatternMatcher(), null));
+      dd.addExcludeRule(CONF_DEFAULT_NAME, new DefaultExcludeRule(excludeArtifactId, new IvyMavenLikePatternMatcher(), null));
+      dd.addExcludeRule(CONF_COMPILE_NAME, new DefaultExcludeRule(excludeArtifactId, new IvyMavenLikePatternMatcher(), null));
+      dd.addExcludeRule(CONF_OPTIONAL_NAME, new DefaultExcludeRule(excludeArtifactId, new IvyMavenLikePatternMatcher(), null));
     }
   }
 
