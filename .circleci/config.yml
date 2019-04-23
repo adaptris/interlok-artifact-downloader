@@ -114,7 +114,6 @@ workflows:
   on_commit:
     jobs:
       - build
-      - buildjava11
 
   nightly:
     triggers:
