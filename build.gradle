@@ -107,7 +107,7 @@ dependencies {
   compile("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
   compile "org.springframework.boot:spring-boot-starter-jersey:$springBootVersion"
 
-  compile "com.google.guava:guava:27.1-jre"
+  compile "com.google.guava:guava:28.0-jre"
 
   compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
   compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
