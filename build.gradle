@@ -29,6 +29,7 @@ ext {
   slf4jVersion = "1.7.26"
   springBootVersion = "2.1.6.RELEASE"
   jacksonVersion = "2.9.9"
+  jacksonDatabindVersion = "2.9.9.1"
   swaggerVersion = "1.5.22"
   ivyVersion = "2.4.0"
 }
@@ -111,7 +112,7 @@ dependencies {
 
   compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
   compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-  compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+  compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
   compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:$jacksonVersion"
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
