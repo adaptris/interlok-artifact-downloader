@@ -29,7 +29,7 @@ ext {
   slf4jVersion = "1.7.26"
   springBootVersion = "2.1.6.RELEASE"
   jacksonVersion = "2.9.9"
-  jacksonDatabindVersion = "2.9.9.1"
+  jacksonDatabindVersion = "2.10.0.pr1"
   swaggerVersion = "1.5.22"
   ivyVersion = "2.4.0"
 }
