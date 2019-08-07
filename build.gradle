@@ -1,6 +1,6 @@
 // buildscript {
 //   ext {
-//     springBootVersion = "2.1.6.RELEASE"
+//     springBootVersion = "2.1.7.RELEASE"
 //   }
 //   repositories {
 //     mavenCentral()
@@ -27,7 +27,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
   slf4jVersion = "1.7.26"
-  springBootVersion = "2.1.6.RELEASE"
+  springBootVersion = "2.1.7.RELEASE"
   jacksonVersion = "2.9.9"
   jacksonDatabindVersion = "2.9.9.2"
   swaggerVersion = "1.5.22"
