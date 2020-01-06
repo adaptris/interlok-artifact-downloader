@@ -18,7 +18,7 @@ ext {
   springBootVersion = "2.2.2.RELEASE"
   jacksonVersion = "2.10.2"
   jacksonDatabindVersion = "2.10.1"
-  swaggerVersion = "1.5.24"
+  swaggerVersion = "1.6.0"
   ivyVersion = "2.5.0"
 }
 
