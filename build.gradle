@@ -15,7 +15,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
   slf4jVersion = "1.7.26"
-  springBootVersion = "2.2.2.RELEASE"
+  springBootVersion = "2.2.3.RELEASE"
   jacksonVersion = "2.10.2"
   jacksonDatabindVersion = "2.10.2"
   swaggerVersion = "1.6.0"
