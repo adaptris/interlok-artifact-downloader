@@ -6,6 +6,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
 import com.adaptris.downloader.controllers.ArtifactController;
+import com.adaptris.downloader.controllers.StarterController;
 
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
@@ -22,6 +23,7 @@ public class JerseyConfig extends ResourceConfig {
     // packages("com.adaptris.downloader.controllers");
     // Using register instead
     register(ArtifactController.class);
+    register(StarterController.class);
   }
 
   private void configureSwagger() {

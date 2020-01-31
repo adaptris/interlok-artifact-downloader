@@ -1,5 +1,7 @@
 package com.adaptris.downloader.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
@@ -28,10 +30,8 @@ import javax.ws.rs.core.Response;
 import org.hamcrest.core.StringContains;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.matchers.ThrowableMessageMatcher;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,9 +59,6 @@ public class ArtifactControllerTest {
 
   URL resource = getClass().getClassLoader().getResource("artifact-controller-test");
 
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
-
   @Mock
   private ArtifactDownloaderProperties properties;
   @Mock
@@ -84,6 +81,14 @@ public class ArtifactControllerTest {
 
     Assert.assertNotNull(usage);
     Assert.assertEquals("/{group}/{artifact}/{version}", usage.getLink());
+  }
+
+  @Test
+  public void testList() throws ArtifactDownloaderException {
+    List<String> artifacts = artifactController.list(VERSION);
+
+    Assert.assertNotNull(artifacts);
+    Assert.assertTrue(artifacts.isEmpty());
   }
 
   @Test
@@ -115,25 +120,22 @@ public class ArtifactControllerTest {
 
   @Test
   public void testResolveSyncInvalidGroupId() throws ArtifactDownloaderException, DependenciesResolverException {
-    expectedEx.expect(DownloaderClientErrorException.class);
-    expectedEx.expectMessage("HTTP 400 Bad Request");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
         VERSION, null, false, "");
 
-    artifactController.resolveSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
+    DownloaderClientErrorException exception = assertThrows(DownloaderClientErrorException.class, () -> {
+      artifactController.resolveSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
+    });
+    assertEquals("HTTP 400 Bad Request", exception.getMessage());
 
     verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testResolveSyncUnresolvedDependency() throws ArtifactDownloaderException, DependenciesResolverException {
-    expectedEx.expect(DownloaderClientErrorException.class);
-    expectedEx.expectMessage("HTTP 404 Not Found");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
@@ -142,7 +144,10 @@ public class ArtifactControllerTest {
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
         getCacheDir(), false);
 
-    artifactController.resolveSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
+    DownloaderClientErrorException exception = assertThrows(DownloaderClientErrorException.class, () -> {
+      artifactController.resolveSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
+    });
+    assertEquals("HTTP 404 Not Found", exception.getMessage());
 
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
@@ -264,25 +269,22 @@ public class ArtifactControllerTest {
 
   @Test
   public void testDownloadSyncInvalidGroupId() throws ArtifactDownloaderException, DependenciesResolverException {
-    expectedEx.expect(BadRequestException.class);
-    expectedEx.expectMessage("[invalid.group] is not a valid group Id. It need to start with [com.adaptris]");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
     doThrow(new InvalidGroupIdDownloaderException("invalid.group", GROUP)).when(artifactService).download("invalid.group", ARTIFACT,
         VERSION, null, false, "");
 
-    artifactController.downloadSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
+    BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+      artifactController.downloadSync("invalid.group", ARTIFACT, VERSION, false, Collections.emptyList());
+    });
+    assertEquals("[invalid.group] is not a valid group Id. It need to start with [com.adaptris]", exception.getMessage());
 
     verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadSyncUnresolvedDependency() throws ArtifactDownloaderException, DependenciesResolverException {
-    expectedEx.expect(NotFoundException.class);
-    expectedEx.expectMessage("Artifact could not be resolved");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
@@ -291,7 +293,10 @@ public class ArtifactControllerTest {
     doThrow(new DependenciesResolverException(dependencyErrors)).when(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null,
         getCacheDir(), false);
 
-    artifactController.downloadSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
+    NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+      artifactController.downloadSync(GROUP, ARTIFACT, VERSION, false, Collections.emptyList());
+    });
+    assertEquals("Artifact could not be resolved", exception.getMessage());
 
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
