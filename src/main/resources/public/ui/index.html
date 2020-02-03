@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/font-awesome/css/adaptris-font-awesome.css" rel="stylesheet">
+    <link href="../css/voerro-vue-tagsinput.css" rel="stylesheet">
     <link href="../css/global.css" rel="stylesheet">
         
     <link href="../favicon.ico" rel="icon" type="image/x-icon" />
@@ -26,64 +27,130 @@
             <img src="../img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Interlok Logo">
             <span>Interlok Artifact Downloader</span>
           </a>
+          <ul class="nav nav-pills" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active"data-toggle="tab" href="#downloader" role="tab" aria-controls="home" aria-selected="true">Artifact Downloader</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#starter" role="tab" aria-controls="home" aria-selected="false">Interlok Starter</a>
+            </li>
+          </ul>
         </nav>
       </header>
       
       <section id="main" class="mb-4">
-        <div class="container">
-          <div class="row justify-content-md-center">
-            <div class="col align-self-center">
-              <div class="card">
-                <h2 class="card-header">
-                  Artifact
-                </h2>
-                <div class="card-body">
-                  <form v-on:submit="download" method="post">
-                    <div class="form-group row">
-<!--                       <div class="text-danger offset-sm-2 col-sm-10 col-form-label"> -->
-<!--                       <b>Please correct the following error(s):</b> -->
-<!--                       <ul> -->
-<!--                         <li v-for="error in errors">{{ error }}</li> -->
-<!--                       </ul> -->
-<!--                       </div> -->
-                    </div>
-                    <div class="form-group row">
-                      <label for="group" class="col-sm-2 col-form-label">Group</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="group" v-bind:class="{'is-invalid': hasError('group')}" id="group" placeholder="Group">
-                        <div class="invalid-feedback" v-text="getError('group')"></div>
+      
+        
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="downloader">
+            <div id="downloader-app">
+              <div class="container">
+                <div class="row justify-content-md-center">
+                  <div class="col align-self-center">
+                    <div class="card">
+                      <h2 class="card-header">
+                        Artifact Downloader
+                      </h2>
+                      <div class="card-body">
+                        <form v-on:submit="download" method="post">
+                          <div class="form-group row">
+      <!--                       <div class="text-danger offset-sm-2 col-sm-10 col-form-label"> -->
+      <!--                       <b>Please correct the following error(s):</b> -->
+      <!--                       <ul> -->
+      <!--                         <li v-for="error in errors">{{ error }}</li> -->
+      <!--                       </ul> -->
+      <!--                       </div> -->
+                          </div>
+                          <div class="form-group row">
+                            <label for="group" class="col-sm-2 col-form-label">Group</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" v-model="group" v-bind:class="{'is-invalid': hasError('group')}" id="downloader-group" placeholder="Group">
+                              <div class="invalid-feedback" v-text="getError('group')"></div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="artifact" class="col-sm-2 col-form-label">Artifact</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" v-model="artifact" v-bind:class="{'is-invalid': hasError('artifact')}" id="downloader-artifact" placeholder="Artifact">
+                              <div class="invalid-feedback" v-text="getError('artifact')"></div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="version" class="col-sm-2 col-form-label">Version</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" v-model="version" v-bind:class="{'is-invalid': hasError('version')}" id="downloader-version" placeholder="Version">
+                              <div class="invalid-feedback" v-text="getError('version')"></div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-2">
+                              <button type="submit" class="btn btn-primary" v-bind:disabled="loading">
+                                <i v-show="!loading" class="fa fa-download"></i>
+                                <i v-show="loading" class="fa fa-spinner fa-spin"></i>
+                                Download
+                              </button>
+                            </div>
+                            <div class="col-sm-10 col-form-label">
+                              <div class="text-muted" v-if="downloadMessage" v-text="downloadMessage"></div>
+                              <div class="text-danger" v-if="hasError('global')">
+                                <span v-text="getError('global')"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
-                    <div class="form-group row">
-                      <label for="artifact" class="col-sm-2 col-form-label">Artifact</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="artifact" v-bind:class="{'is-invalid': hasError('artifact')}" id="artifact" placeholder="Artifact">
-                        <div class="invalid-feedback" v-text="getError('artifact')"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="starter">
+            <div id="starter-app">
+              <div class="container">
+                <div class="row justify-content-md-center">
+                  <div class="col align-self-center">
+                    <div class="card">
+                      <h2 class="card-header">
+                        Interlok Starter
+                      </h2>
+                      <div class="card-body">
+                        <form v-on:submit="generate" method="post">
+                          <div class="form-group row">
+                          </div>
+                          <div class="form-group row">
+                            <label for="version" class="col-sm-2 col-form-label">Version</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" v-model="version" v-bind:class="{'is-invalid': hasError('version')}" v-on:change="getArtifacts" id="starter-version" placeholder="Version">
+                              <div class="invalid-feedback" v-text="getError('version')"></div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="artifacts" class="col-sm-2 col-form-label">Artifacts</label>
+                            <div class="col-sm-10">
+                              <v-tags-input element-id="starter-artifacts" class="form-control" v-model="selectedArtifacts" v-bind:class="{'is-invalid': hasError('artifacts')}" :existing-tags="existingArtifacts" :typeahead="true" typeahead-hide-discard="true" typeahead-style="dropdown"  placeholder="Artifacts"></v-tags-input>
+                              <div class="invalid-feedback" v-text="getError('artifacts')"></div>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-2">
+                              <button type="submit" class="btn btn-primary" v-bind:disabled="loading">
+                                <i v-show="!loading" class="fa fa-download"></i>
+                                <i v-show="loading" class="fa fa-spinner fa-spin"></i>
+                                Generate
+                              </button>
+                            </div>
+                            <div class="col-sm-10 col-form-label">
+                              <div class="text-muted" v-if="generateMessage" v-text="generateMessage"></div>
+                              <div class="text-danger" v-if="hasError('global')">
+                                <span v-text="getError('global')"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
-                    <div class="form-group row">
-                      <label for="version" class="col-sm-2 col-form-label">Version</label>
-                      <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="version" v-bind:class="{'is-invalid': hasError('version')}" id="version" placeholder="Version">
-                        <div class="invalid-feedback" v-text="getError('version')"></div>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <div class="col-sm-2">
-                        <button type="submit" class="btn btn-primary" v-bind:disabled="loading">
-                          <i v-show="!loading" class="fa fa-download"></i>
-                          <i v-show="loading" class="fa fa-spinner fa-spin"></i>
-                          Download
-                        </button>
-                      </div>
-                      <div class="col-sm-10 col-form-label">
-                        <div class="text-muted" v-if="downloadMessage" v-text="downloadMessage"></div>
-                        <div class="text-danger" v-if="hasError('global')">
-                          <span v-text="getError('global')"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -100,10 +167,11 @@
       </footer>
     </div>
     
-    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-3.4.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/global.js"></script>
     <script src="../js/vue.min.js"></script>
+    <script src="../js/voerro-vue-tagsinput.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
