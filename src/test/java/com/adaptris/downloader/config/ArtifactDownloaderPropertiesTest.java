@@ -12,24 +12,37 @@ public class ArtifactDownloaderPropertiesTest {
   public void testNew() {
     ArtifactDownloaderProperties properties = new ArtifactDownloaderProperties();
 
+    Assert.assertNull(properties.getNexusBaseUrl());
+    Assert.assertNull(properties.getIndexUrl());
     Assert.assertNull(properties.getRepoBaseUrl());
     Assert.assertNotNull(properties.getRepos());
+    Assert.assertNull(properties.getRepositoryReleases());
+    Assert.assertNull(properties.getRepositorySnapshots());
     Assert.assertEquals(Collections.singletonList("public"), properties.getRepos());
     Assert.assertNull(properties.getResolverLogLevel());
     Assert.assertEquals(System.getProperty("user.home"), properties.getDestination());
     Assert.assertNotNull(properties.getExcludes());
     Assert.assertTrue(properties.getExcludes().isEmpty());
+    Assert.assertNotNull(properties.getUnwanted());
+    Assert.assertTrue(properties.getUnwanted().isEmpty());
+    Assert.assertNull(properties.getIndexArtifactIdXpath());
     Assert.assertNull(properties.getCredentials());
   }
 
   @Test
   public void testNewWithData() {
     ArtifactDownloaderProperties properties = new ArtifactDownloaderProperties();
-    properties.setRepoBaseUrl("http://repo-base-url");
+    properties.setNexusBaseUrl("http://repo-base-url");
+    properties.setIndexUrl("http://repo-base-url/indexes");
+    properties.setRepoBaseUrl("http://repo-base-url/repositories");
     properties.setRepos(Arrays.asList("public, snapshots"));
+    properties.setRepositoryReleases("releases");
+    properties.setRepositorySnapshots("snapshots");
     properties.setResolverLogLevel("info");
     properties.setDestination("/destintation/dir");
     properties.setExcludes(Arrays.asList("group:artifact"));
+    properties.setUnwanted(Arrays.asList("artifact"));
+    properties.setIndexArtifactIdXpath("/xpath/text()");
 
     ArtifactDownloaderCredentialsProperties credentials = new ArtifactDownloaderCredentialsProperties();
     credentials.setRealm("realm");
@@ -38,13 +51,19 @@ public class ArtifactDownloaderPropertiesTest {
     credentials.setPassword("password");
     properties.setCredentials(credentials);
 
-    Assert.assertEquals("http://repo-base-url", properties.getRepoBaseUrl());
+    Assert.assertEquals("http://repo-base-url", properties.getNexusBaseUrl());
+    Assert.assertEquals("http://repo-base-url/indexes", properties.getIndexUrl());
+    Assert.assertEquals("http://repo-base-url/repositories", properties.getRepoBaseUrl());
     Assert.assertNotNull(properties.getRepos());
+    Assert.assertEquals("releases", properties.getRepositoryReleases());
+    Assert.assertEquals("snapshots", properties.getRepositorySnapshots());
     Assert.assertEquals(Arrays.asList("public, snapshots"), properties.getRepos());
     Assert.assertEquals("info", properties.getResolverLogLevel());
     Assert.assertEquals("/destintation/dir", properties.getDestination());
     Assert.assertNotNull(properties.getExcludes());
     Assert.assertEquals(Arrays.asList("group:artifact"), properties.getExcludes());
+    Assert.assertEquals(Arrays.asList("artifact"), properties.getUnwanted());
+    Assert.assertEquals("/xpath/text()", properties.getIndexArtifactIdXpath());
 
     Assert.assertNotNull(properties.getCredentials());
     Assert.assertEquals("realm", properties.getCredentials().getRealm());

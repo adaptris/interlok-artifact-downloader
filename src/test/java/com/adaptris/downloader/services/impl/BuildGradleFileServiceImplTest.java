@@ -9,7 +9,7 @@ import static org.mockito.Mockito.doReturn;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,15 +40,18 @@ public class BuildGradleFileServiceImplTest {
   @Test
   public void testGenerate() throws Exception {
     List<GradleItem> gradleItems = buildGradleFileService.generate("3.9.2-RELEASE",
-        Collections.singletonList("interlok-json"));
+        Arrays.asList("interlok-json", "interlok-csv"));
 
+    assertEquals("build.gradle", gradleItems.get(0).getName());
     String gradleFile = new String(gradleItems.get(0).getPayload(), StandardCharsets.UTF_8.name());
 
+    assertEquals("gradle.properties", gradleItems.get(1).getName());
     Properties gradleProperties = new Properties();
     gradleProperties.load(new ByteArrayInputStream(gradleItems.get(1).getPayload()));
 
     assertFalse(gradleFile.isEmpty());
     assertTrue(gradleFile.contains("interlok-json"));
+    assertTrue(gradleFile.contains("interlok-csv"));
     assertEquals("3.9.2-RELEASE", gradleProperties.get("interlokVersion"));
     assertNull(gradleProperties.get("interlokBaseFilesystemUrl"));
   }
@@ -56,15 +59,18 @@ public class BuildGradleFileServiceImplTest {
   @Test
   public void testGenerateSnapshotVersion() throws Exception {
     List<GradleItem> gradleItems = buildGradleFileService.generate("3.9.3-SNAPSHOT",
-        Collections.singletonList("interlok-json"));
+        Arrays.asList("interlok-json", "interlok-csv"));
 
+    assertEquals("build.gradle", gradleItems.get(0).getName());
     String gradleFile = new String(gradleItems.get(0).getPayload(), StandardCharsets.UTF_8.name());
 
+    assertEquals("gradle.properties", gradleItems.get(1).getName());
     Properties gradleProperties = new Properties();
     gradleProperties.load(new ByteArrayInputStream(gradleItems.get(1).getPayload()));
 
     assertFalse(gradleFile.isEmpty());
     assertTrue(gradleFile.contains("interlok-json"));
+    assertTrue(gradleFile.contains("interlok-csv"));
     assertEquals("3.9.3-SNAPSHOT", gradleProperties.get("interlokVersion"));
     assertNotNull(gradleProperties.get("interlokBaseFilesystemUrl"));
   }

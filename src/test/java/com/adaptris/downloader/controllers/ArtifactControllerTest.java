@@ -48,7 +48,9 @@ import com.adaptris.downloader.resolvers.DependenciesResolverFactory;
 import com.adaptris.downloader.resources.ArtifactAndDependendencies;
 import com.adaptris.downloader.resources.Usage;
 import com.adaptris.downloader.services.ArtifactService;
+import com.adaptris.downloader.services.OptionalComponentsService;
 import com.adaptris.downloader.services.impl.ArtifactServiceImpl;
+import com.adaptris.downloader.services.impl.OptionalComponentsServiceImpl;
 
 public class ArtifactControllerTest {
 
@@ -66,6 +68,8 @@ public class ArtifactControllerTest {
   @Spy
   @InjectMocks
   private ArtifactService artifactService = new ArtifactServiceImpl();
+  @Spy
+  private OptionalComponentsService optionalComponentsService = new OptionalComponentsServiceImpl();
   @InjectMocks
   private final ArtifactController artifactController = new ArtifactController();
 
@@ -85,10 +89,21 @@ public class ArtifactControllerTest {
 
   @Test
   public void testList() throws ArtifactDownloaderException {
+    doReturn(Collections.singletonList("interlok-json")).when(optionalComponentsService).loadArtifacts(VERSION);
+
     List<String> artifacts = artifactController.list(VERSION);
 
     Assert.assertNotNull(artifacts);
-    Assert.assertTrue(artifacts.isEmpty());
+    Assert.assertEquals(Collections.singletonList("interlok-json"), artifacts);
+  }
+
+  @Test
+  public void testListFails() throws ArtifactDownloaderException {
+    doThrow(new ArtifactDownloaderException("error")).when(optionalComponentsService).loadArtifacts(VERSION);
+
+    assertThrows(ArtifactDownloaderException.class, () -> {
+      artifactController.list(VERSION);
+    });
   }
 
   @Test

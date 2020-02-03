@@ -3,7 +3,6 @@ package com.adaptris.downloader.controllers;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,6 +30,7 @@ import com.adaptris.downloader.config.InvalidGroupIdDownloaderException;
 import com.adaptris.downloader.resources.ArtifactAndDependendencies;
 import com.adaptris.downloader.resources.Usage;
 import com.adaptris.downloader.services.ArtifactService;
+import com.adaptris.downloader.services.OptionalComponentsService;
 import com.adaptris.downloader.utils.ZipUtils;
 
 import io.swagger.annotations.Api;
@@ -53,6 +53,8 @@ public class ArtifactController extends AbstractController {
 
   @Inject
   private ArtifactService artifactService;
+  @Inject
+  private OptionalComponentsService optionalComponentsService;
 
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -72,9 +74,7 @@ public class ArtifactController extends AbstractController {
   @ApiOperation(value = "List the available interlok artifacts for a given version.")
   public List<String> list(@ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version)
       throws ArtifactDownloaderException {
-
-    List<String> artifacts = new ArrayList<>();
-    return artifacts;
+      return optionalComponentsService.loadArtifacts(version);
   }
 
   @GET
