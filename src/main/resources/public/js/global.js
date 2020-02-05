@@ -14,6 +14,7 @@ var adp = adp || {};
     adp.url.context          = getContextPath();             // "/interlok-artifact-downloader"
     adp.url.api              = getContextPath() + "/api";
     adp.url.artifacts        = adp.url.api + "/artifacts";
+    adp.url.starter          = adp.url.api + "/starter";
     
 })(adp);
 
@@ -46,6 +47,18 @@ var adp = adp || {};
             dataType: "json",
             contentType: "application/json"
         });
+    };
+    adp.ws.getArtifacts = function(version) {
+    	return $.ajax({
+    		url: adp.url.artifacts + "/" + version,
+    		type: "GET",
+    		dataType: "json",
+    		contentType: "application/json"
+    	});
+    };
+    
+    adp.ws.starterGenerate = function(version, artifacts) {
+        window.location = adp.url.starter + "/generate/" + version + "?artifacts=" + artifacts;
     };
     
 })(adp);

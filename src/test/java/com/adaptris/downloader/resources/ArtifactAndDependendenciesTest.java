@@ -1,8 +1,11 @@
 package com.adaptris.downloader.resources;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ArtifactAndDependendenciesTest {
@@ -11,9 +14,9 @@ public class ArtifactAndDependendenciesTest {
   public void testNew() {
     ArtifactAndDependendencies resource = new ArtifactAndDependendencies();
 
-    Assert.assertNull(resource.getArtifact());
-    Assert.assertNotNull(resource.getDependencies());
-    Assert.assertEquals(0, resource.getDependencies().size());
+    assertNull(resource.getArtifact());
+    assertNotNull(resource.getDependencies());
+    assertEquals(0, resource.getDependencies().size());
   }
 
   @Test
@@ -23,10 +26,10 @@ public class ArtifactAndDependendenciesTest {
     resource.setDependencies(new ArrayList<>());
     resource.addDependency("com.adaptris:dependency:version");
 
-    Assert.assertEquals("com.adaptris:artifact:version", resource.getArtifact());
-    Assert.assertNotNull(resource.getDependencies());
-    Assert.assertEquals(1, resource.getDependencies().size());
-    Assert.assertEquals("com.adaptris:dependency:version", resource.getDependencies().get(0));
+    assertEquals("com.adaptris:artifact:version", resource.getArtifact());
+    assertNotNull(resource.getDependencies());
+    assertEquals(1, resource.getDependencies().size());
+    assertEquals("com.adaptris:dependency:version", resource.getDependencies().get(0));
   }
 
 }

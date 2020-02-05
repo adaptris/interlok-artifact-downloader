@@ -12,12 +12,34 @@ import com.adaptris.downloader.resolvers.DependenciesResolverProperties;
 @ConfigurationProperties("artifact.downloader")
 public class ArtifactDownloaderProperties implements DependenciesResolverProperties {
 
+  private String nexusBaseUrl;
+  private String indexUrl;
   private String repoBaseUrl;
   private List<String> repos;
+  private String repositoryReleases;
+  private String repositorySnapshots;
   private ArtifactDownloaderCredentialsProperties credentials;
   private String resolverLogLevel;
   private String destination;
   private List<String> excludes;
+  private List<String> unwanted;
+  private String indexArtifactIdXpath;
+
+  public String getNexusBaseUrl() {
+    return nexusBaseUrl;
+  }
+
+  public void setNexusBaseUrl(String nexusBaseUrl) {
+    this.nexusBaseUrl = nexusBaseUrl;
+  }
+
+  public String getIndexUrl() {
+    return indexUrl;
+  }
+
+  public void setIndexUrl(String indexUrl) {
+    this.indexUrl = indexUrl;
+  }
 
   @Override
   public String getRepoBaseUrl() {
@@ -37,6 +59,22 @@ public class ArtifactDownloaderProperties implements DependenciesResolverPropert
   @Override
   public void setRepos(List<String> repos) {
     this.repos = repos;
+  }
+
+  public String getRepositoryReleases() {
+    return repositoryReleases;
+  }
+
+  public void setRepositoryReleases(String repositoryReleases) {
+    this.repositoryReleases = repositoryReleases;
+  }
+
+  public String getRepositorySnapshots() {
+    return repositorySnapshots;
+  }
+
+  public void setRepositorySnapshots(String repositorySnapshots) {
+    this.repositorySnapshots = repositorySnapshots;
   }
 
   @Override
@@ -73,6 +111,22 @@ public class ArtifactDownloaderProperties implements DependenciesResolverPropert
 
   public void setExcludes(List<String> excludes) {
     this.excludes = excludes;
+  }
+
+  public List<String> getUnwanted() {
+    return unwanted == null ? Collections.emptyList() : unwanted;
+  }
+
+  public void setUnwanted(List<String> unwanted) {
+    this.unwanted = unwanted;
+  }
+
+  public String getIndexArtifactIdXpath() {
+    return indexArtifactIdXpath;
+  }
+
+  public void setIndexArtifactIdXpath(String indexArtifactIdXpath) {
+    this.indexArtifactIdXpath = indexArtifactIdXpath;
   }
 
 }

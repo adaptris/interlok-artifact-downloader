@@ -1,30 +1,28 @@
 package com.adaptris.downloader.resolvers;
 
-import org.junit.Assert;
-import org.junit.Rule;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.adaptris.downloader.config.ArtifactDownloaderProperties;
 
 public class DependenciesResolverFactoryTest {
 
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
-
   @Test
   public void testGetResolver() {
     DependenciesResolver resolver = new DependenciesResolverFactory(new ArtifactDownloaderProperties()).getResolver();
 
-    Assert.assertNotNull(resolver);
+    assertNotNull(resolver);
   }
 
   @Test
   public void testGetResolverNullProperties() {
-    expectedEx.expect(IllegalArgumentException.class);
-    expectedEx.expectMessage("The Dependencies Resolver Properties should not be null");
-
-    new DependenciesResolverFactory(null).getResolver();
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      new DependenciesResolverFactory(null).getResolver();
+    });
+    assertEquals("The Dependencies Resolver Properties should not be null", exception.getMessage());
   }
 
 }

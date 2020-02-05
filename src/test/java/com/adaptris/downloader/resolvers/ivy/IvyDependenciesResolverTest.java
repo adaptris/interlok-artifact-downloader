@@ -1,7 +1,13 @@
 package com.adaptris.downloader.resolvers.ivy;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
@@ -28,21 +34,14 @@ import org.apache.ivy.util.MessageLogger;
 import org.apache.ivy.util.url.CredentialsStore;
 import org.apache.ivy.util.url.URLHandlerDispatcher;
 import org.apache.ivy.util.url.URLHandlerRegistry;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.function.Executable;
 
 import com.adaptris.downloader.config.ArtifactDownloaderCredentialsProperties;
 import com.adaptris.downloader.config.ArtifactDownloaderProperties;
 import com.adaptris.downloader.resolvers.DependenciesResolverException;
 
 public class IvyDependenciesResolverTest {
-
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void testInitMessageLogger() throws DependenciesResolverException {
@@ -53,8 +52,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_ERR, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_ERR, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -67,8 +66,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_ERR, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_ERR, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -81,8 +80,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_WARN, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_WARN, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -95,8 +94,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_INFO, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_INFO, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -109,8 +108,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_VERBOSE, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_VERBOSE, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -123,8 +122,8 @@ public class IvyDependenciesResolverTest {
 
     MessageLogger messageLogger = Message.getDefaultLogger();
 
-    Assert.assertTrue(messageLogger instanceof DefaultMessageLogger);
-    Assert.assertEquals(Message.MSG_DEBUG, ((DefaultMessageLogger) messageLogger).getLevel());
+    assertTrue(messageLogger instanceof DefaultMessageLogger);
+    assertEquals(Message.MSG_DEBUG, ((DefaultMessageLogger) messageLogger).getLevel());
   }
 
   @Test
@@ -136,12 +135,12 @@ public class IvyDependenciesResolverTest {
     IvySettings ivySettings = new IvySettings();
     resolver.addRepos(null, ivySettings);
 
-    Assert.assertEquals("chain", ivySettings.getDefaultResolver().getName());
-    Assert.assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
+    assertEquals("chain", ivySettings.getDefaultResolver().getName());
+    assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
     List<?> resolvers = ((ChainResolver) ivySettings.getDefaultResolver()).getResolvers();
-    Assert.assertEquals(2, resolvers.size());
-    Assert.assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
-    Assert.assertEquals("public", ((DependencyResolver) resolvers.get(1)).getName());
+    assertEquals(2, resolvers.size());
+    assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
+    assertEquals("public", ((DependencyResolver) resolvers.get(1)).getName());
   }
 
   @Test
@@ -156,24 +155,24 @@ public class IvyDependenciesResolverTest {
     properties.setCredentials(credentialsProperties);
     IvyDependenciesResolver resolver = new IvyDependenciesResolver(properties);
 
-    Assert.assertFalse("This host should not have any credentials yet", CredentialsStore.INSTANCE.hasCredentials("base-repo"));
+    assertFalse("This host should not have any credentials yet", CredentialsStore.INSTANCE.hasCredentials("base-repo"));
 
     IvySettings ivySettings = new IvySettings();
     resolver.addRepos(null, ivySettings);
 
-    Assert.assertEquals("chain", ivySettings.getDefaultResolver().getName());
-    Assert.assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
+    assertEquals("chain", ivySettings.getDefaultResolver().getName());
+    assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
     List<?> resolvers = ((ChainResolver) ivySettings.getDefaultResolver()).getResolvers();
-    Assert.assertEquals(2, resolvers.size());
-    Assert.assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
-    Assert.assertEquals("public", ((DependencyResolver) resolvers.get(1)).getName());
+    assertEquals(2, resolvers.size());
+    assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
+    assertEquals("public", ((DependencyResolver) resolvers.get(1)).getName());
 
     Credentials credentials = CredentialsStore.INSTANCE.getCredentials("Sonatype Nexus Repository Manager", "base-repo");
-    Assert.assertNotNull(credentials);
-    Assert.assertEquals("username", credentials.getUserName());
-    Assert.assertEquals("password", credentials.getPasswd());
+    assertNotNull(credentials);
+    assertEquals("username", credentials.getUserName());
+    assertEquals("password", credentials.getPasswd());
 
-    Assert.assertTrue(URLHandlerRegistry.getDefault() instanceof URLHandlerDispatcher);
+    assertTrue(URLHandlerRegistry.getDefault() instanceof URLHandlerDispatcher);
   }
 
   @Test
@@ -185,13 +184,13 @@ public class IvyDependenciesResolverTest {
     IvySettings ivySettings = new IvySettings();
     resolver.addRepos("http://custom-repo", ivySettings);
 
-    Assert.assertEquals("chain", ivySettings.getDefaultResolver().getName());
-    Assert.assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
+    assertEquals("chain", ivySettings.getDefaultResolver().getName());
+    assertTrue(ivySettings.getDefaultResolver() instanceof ChainResolver);
     List<?> resolvers = ((ChainResolver) ivySettings.getDefaultResolver()).getResolvers();
-    Assert.assertEquals(3, resolvers.size());
-    Assert.assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
-    Assert.assertEquals("custom", ((DependencyResolver) resolvers.get(1)).getName());
-    Assert.assertEquals("public", ((DependencyResolver) resolvers.get(2)).getName());
+    assertEquals(3, resolvers.size());
+    assertEquals("central", ((DependencyResolver) resolvers.get(0)).getName());
+    assertEquals("custom", ((DependencyResolver) resolvers.get(1)).getName());
+    assertEquals("public", ((DependencyResolver) resolvers.get(2)).getName());
   }
 
   @Test
@@ -207,22 +206,22 @@ public class IvyDependenciesResolverTest {
     resolver.addExcludes(dependencyDescriptor, "group1:artifact1", "group2", "group3:*", "*:artifact4");
 
     ExcludeRule[] excludeRules = dependencyDescriptor.getExcludeRules("default");
-    Assert.assertEquals(4, excludeRules.length);
+    assertEquals(4, excludeRules.length);
     ModuleId firstRuleModuleId = excludeRules[0].getId().getModuleId();
-    Assert.assertEquals("group1", firstRuleModuleId.getOrganisation());
-    Assert.assertEquals("artifact1", firstRuleModuleId.getName());
+    assertEquals("group1", firstRuleModuleId.getOrganisation());
+    assertEquals("artifact1", firstRuleModuleId.getName());
 
     ModuleId secondRuleModuleId = excludeRules[1].getId().getModuleId();
-    Assert.assertEquals("group2", secondRuleModuleId.getOrganisation());
-    Assert.assertEquals("*", secondRuleModuleId.getName());
+    assertEquals("group2", secondRuleModuleId.getOrganisation());
+    assertEquals("*", secondRuleModuleId.getName());
 
     ModuleId thirdRuleModuleId = excludeRules[2].getId().getModuleId();
-    Assert.assertEquals("group3", thirdRuleModuleId.getOrganisation());
-    Assert.assertEquals("*", thirdRuleModuleId.getName());
+    assertEquals("group3", thirdRuleModuleId.getOrganisation());
+    assertEquals("*", thirdRuleModuleId.getName());
 
     ModuleId fourthRuleModuleId = excludeRules[3].getId().getModuleId();
-    Assert.assertEquals("*", fourthRuleModuleId.getOrganisation());
-    Assert.assertEquals("artifact4", fourthRuleModuleId.getName());
+    assertEquals("*", fourthRuleModuleId.getOrganisation());
+    assertEquals("artifact4", fourthRuleModuleId.getName());
   }
 
   @Test
@@ -238,7 +237,7 @@ public class IvyDependenciesResolverTest {
     resolver.addExcludes(dependencyDescriptor);
 
     ExcludeRule[] excludeRules = dependencyDescriptor.getExcludeRules("default");
-    Assert.assertEquals(0, excludeRules.length);
+    assertEquals(0, excludeRules.length);
   }
 
   @Test
@@ -252,8 +251,6 @@ public class IvyDependenciesResolverTest {
 
   @Test
   public void testHandleErrorsWithErrors() throws DependenciesResolverException {
-    assertException();
-
     // Has error
     ConfigurationResolveReport configurationResolveReport = mock(ConfigurationResolveReport.class);
     doReturn(true).when(configurationResolveReport).hasError();
@@ -281,11 +278,13 @@ public class IvyDependenciesResolverTest {
     ArtifactDownloaderProperties properties = new ArtifactDownloaderProperties();
     IvyDependenciesResolver resolver = new IvyDependenciesResolver(properties);
 
-    resolver.handleErrors(report);
+    assertException(() -> {
+      resolver.handleErrors(report);
+    });
 
     verify(configurationResolveReport).hasError();
     verify(artifact).getModuleRevisionId();
-    verify(artifactDownloadReport).getArtifact();
+    verify(artifactDownloadReport, times(2)).getArtifact();
     verify(configurationResolveReport).getArtifactsReports(DownloadStatus.FAILED, true);
     verify(ivyNode).getId();
     verify(configurationResolveReport).getUnresolvedDependencies();
@@ -293,8 +292,6 @@ public class IvyDependenciesResolverTest {
 
   @Test
   public void testHandleErrorsWithErrorsNoErrorMessage() throws DependenciesResolverException {
-    assertException();
-
     // Has error
     ConfigurationResolveReport configurationResolveReport = mock(ConfigurationResolveReport.class);
     doReturn(true).when(configurationResolveReport).hasError();
@@ -322,31 +319,23 @@ public class IvyDependenciesResolverTest {
     ArtifactDownloaderProperties properties = new ArtifactDownloaderProperties();
     IvyDependenciesResolver resolver = new IvyDependenciesResolver(properties);
 
-    resolver.handleErrors(report);
+    assertException(() -> {
+      resolver.handleErrors(report);
+    });
 
     verify(configurationResolveReport).hasError();
     verify(artifact).getModuleRevisionId();
-    verify(artifactDownloadReport).getArtifact();
+    verify(artifactDownloadReport, times(2)).getArtifact();
     verify(configurationResolveReport).getArtifactsReports(DownloadStatus.FAILED, true);
     verify(ivyNode).getId();
     verify(configurationResolveReport).getUnresolvedDependencies();
   }
 
-  private void assertException() {
-    expectedEx.expect(DependenciesResolverException.class);
-    expectedEx.expectMessage("Dependency resolved with errors.");
-    expectedEx.expect(new BaseMatcher<DependenciesResolverException>() {
-      @Override
-      public boolean matches(Object item) {
-        DependenciesResolverException exceptions = (DependenciesResolverException) item;
-        return exceptions.getDependencyProblemMessages().size() == 3;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("The DependenciesResolverException should bave 3 dependency problem messages");
-      }
-    });
+  private void assertException(Executable executable) {
+    DependenciesResolverException exception = assertThrows(DependenciesResolverException.class, executable);
+    assertEquals("Dependency resolved with errors.", exception.getMessage());
+    assertEquals(3, exception.getDependencyProblemMessages().size(),
+        "The DependenciesResolverException should bave 3 dependency problem messages");
   }
 
   private ResolveReport buildReport() {

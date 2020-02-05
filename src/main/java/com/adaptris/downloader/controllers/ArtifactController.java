@@ -17,7 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -31,6 +30,7 @@ import com.adaptris.downloader.config.InvalidGroupIdDownloaderException;
 import com.adaptris.downloader.resources.ArtifactAndDependendencies;
 import com.adaptris.downloader.resources.Usage;
 import com.adaptris.downloader.services.ArtifactService;
+import com.adaptris.downloader.services.OptionalComponentsService;
 import com.adaptris.downloader.utils.ZipUtils;
 
 import io.swagger.annotations.Api;
@@ -40,14 +40,12 @@ import io.swagger.annotations.ApiParam;
 @Api(tags = "artifacts")
 @Path("/artifacts")
 @Controller
-public class ArtifactController {
+public class ArtifactController extends AbstractController {
 
   private static final String GROUP = "group";
   private static final String GROUP_DESC = "Artifact group, e.g. com.adaptris";
   private static final String ARTIFACT = "artifact";
   private static final String ARTIFACT_DESC = "Artifact name";
-  private static final String VERSION = "version";
-  private static final String VERSION_DESC = "Artifact version";
   private static final String OPTIONAL = "optional";
   private static final String OPTIONAL_DESC = "Add optional dependencies";
   private static final String EXCLUDES = "excludes";
@@ -55,6 +53,8 @@ public class ArtifactController {
 
   @Inject
   private ArtifactService artifactService;
+  @Inject
+  private OptionalComponentsService optionalComponentsService;
 
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -65,6 +65,16 @@ public class ArtifactController {
     Usage usage = new Usage();
     usage.setLink("/{group}/{artifact}/{version}");
     return usage;
+  }
+
+  @GET
+  @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+  @Path("{version}")
+  @ApiOperation(value = "List the available interlok artifacts for a given version.")
+  public List<String> list(@ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version)
+      throws ArtifactDownloaderException {
+      return optionalComponentsService.loadArtifacts(version);
   }
 
   @GET
@@ -112,7 +122,7 @@ public class ArtifactController {
 
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @Produces({"application/zip"})
+  @Produces({APPLICATION_ZIP})
   @Path("{group}/{artifact}/{version}/sync")
   @ApiOperation(value = "Resolve and download a zip file with the artifact and its dependencies. Normal synchronous request.")
   public Response downloadSync(
@@ -129,7 +139,7 @@ public class ArtifactController {
 
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @Produces({"application/zip"})
+  @Produces({APPLICATION_ZIP})
   @Path("{group}/{artifact}/{version}")
   @ApiOperation(value = "Resolve and download a zip file with the artifact and its dependencies. Asynchronous request.")
   public void downloadAsync(@ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
@@ -180,8 +190,7 @@ public class ArtifactController {
     try {
       List<File> artifacts = artifactServiceDownload(group, artifact, version, optional, excludes);
 
-      ByteArrayOutputStream baos = buildZip(artifacts);
-      return buildZipResponse(baos.toByteArray(), artifact + "-" + version);
+      return filesToZipResponse(artifacts, artifact + "-" + version);
     } catch (InvalidGroupIdDownloaderException igde) {
       throw new BadRequestException(igde.getLocalizedMessage());
     } catch (ArtifactUnresolvedDownloaderException aude) {
@@ -196,17 +205,17 @@ public class ArtifactController {
     return artifacts;
   }
 
+  private Response filesToZipResponse(List<File> files, String zipName) throws ArtifactDownloaderException {
+    ByteArrayOutputStream baos = buildZip(files);
+    return buildZipResponse(baos.toByteArray(), zipName);
+  }
+
   private ByteArrayOutputStream buildZip(List<File> artifacts) throws ArtifactDownloaderException {
     try {
       return ZipUtils.zipFileList(artifacts);
     } catch (IOException expts) {
       throw new ArtifactDownloaderException("Failed to zip files", expts);
     }
-  }
-
-  private Response buildZipResponse(byte[] byteArray, String name) {
-    return Response.ok(byteArray).type("application/zip")
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + name + ".zip\"").build();
   }
 
 }

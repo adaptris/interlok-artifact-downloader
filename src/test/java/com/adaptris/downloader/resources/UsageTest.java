@@ -1,6 +1,8 @@
 package com.adaptris.downloader.resources;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.Test;
 
 public class UsageTest {
@@ -9,7 +11,7 @@ public class UsageTest {
   public void testNew() {
     Usage resource = new Usage();
 
-    Assert.assertNull(resource.getLink());
+    assertNull(resource.getLink());
   }
 
   @Test
@@ -17,7 +19,7 @@ public class UsageTest {
     Usage resource = new Usage();
     resource.setLink("/{group}/{artifact}/{version}");
 
-    Assert.assertEquals("/{group}/{artifact}/{version}", resource.getLink());
+    assertEquals("/{group}/{artifact}/{version}", resource.getLink());
   }
 
 }

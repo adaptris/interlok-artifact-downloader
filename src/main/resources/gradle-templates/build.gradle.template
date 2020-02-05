@@ -1,0 +1,61 @@
+plugins {
+  id "de.undercouch.download" version "4.0.2"
+}
+
+ext {
+  interlokVersion = project.hasProperty("interlokVersion") ? project.getProperty("interlokVersion") : "NEED interlokVersion PROPERTY"
+  interlokUiVersion = interlokVersion
+  interlokUrlVersion = interlokVersion.replace("-RELEASE", "")
+  interlokBuildParentVersion = interlokVersion.endsWith("-SNAPSHOT") ? "master" : interlokVersion
+  // interlokParentGradle = "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/" + interlokBuildParentVersion + "/build.gradle"
+  interlokParentGradle = "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/build.gradle"
+  releaseInterlokBaseFilesystemUrl = "https://development.adaptris.net/installers/interlok/" + interlokUrlVersion + "/base-filesystem.zip"
+  interlokBaseFilesystemUrl = project.hasProperty("interlokBaseFilesystemUrl") ? project.getProperty("interlokBaseFilesystemUrl") : releaseInterlokBaseFilesystemUrl
+  additionalNexusBaseUrl = project.hasProperty("additionalNexusBaseUrl") ? project.getProperty("additionalNexusBaseUrl") :  ""
+  srcInterlokDir = "src/main/interlok/"
+}
+
+repositories {
+	if (project.hasProperty("additionalNexusBaseUrl")) {
+    	maven { url "${additionalNexusBaseUrl}/nexus/content/groups/public" }
+    	maven { url "${additionalNexusBaseUrl}/nexus/content/groups/interlok" }
+    }
+}
+
+configurations {
+    interlokRuntime{}
+    interlokTestRuntime{}
+    interlokJavadocs{}
+}
+
+dependencies {
+#{interlokRuntime}
+
+#{interlokJavadocs}
+}
+
+allprojects {
+  apply from: "${interlokParentGradle}"
+}
+
+/**
+ * The following two tasks download a ZIP file and extract its
+ * contents to the build directory
+ */
+task downloadBaseFilesystemZip(type: Download) {
+    src interlokBaseFilesystemUrl
+    dest new File(buildDir, "base-filesystem.zip")
+}
+
+// This will override the war file
+task downloadAndUnzipFile(dependsOn: downloadBaseFilesystemZip, type: Copy) {
+    from zipTree(downloadBaseFilesystemZip.dest)
+    into file(srcInterlokDir)
+}
+// Do we need that or the previous step is enough?
+task downloadAndUnzipFileAndCopyConfigDir(dependsOn: downloadAndUnzipFile, type: Copy) {
+    from file(srcInterlokDir + "config/")
+    into interlokTmpConfigDirectory
+}
+
+assemble.dependsOn downloadAndUnzipFileAndCopyConfigDir
