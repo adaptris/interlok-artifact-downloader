@@ -31,13 +31,24 @@ Total time: ... secs
 $ java -jar ./build/libs/interlok-artifact-downloader(-version).jar
 ```
 
-## Usage
+## Downloader Usage
 
 By default a web application will be started and accessible on *http://localhost:8083/interlok-downloader*. See in the section below for how to change the port and the context path.
 
 The web application has a simple UI with three text fields to enter the Interlok artifact group id (only com.adaptris and group starting with com.adaptris. are allowed), the artifact id and the version.
 
 It also has a rest api accessible at *http://localhost:8083/interlok-downloader/api/artifacts/{group}/{artifact}/{version}*.
+More details about the api can be found in the swagger file at *http://localhost:8083/interlok-downloader/api/swagger.json*.
+
+## Starter Usage
+
+The Interlok starter feature make it easier to generate a gradle file to use in an Interlok project to build an Interlok instance with the required optional components and dependencies.
+
+To access the Interlok starter page you have to click on the Interlok Starter menu item.
+
+The web application has a simple UI with two text fields to enter the Interlok version and the list of artifacts id you want to have in the generated build.gradle file.
+
+It also has a rest api accessible at *http://localhost:8083/interlok-downloader/api/starter/generate/{version}?artifacts=interlok-..,interlok-...*.
 More details about the api can be found in the swagger file at *http://localhost:8083/interlok-downloader/api/swagger.json*.
 
 ## Help
@@ -58,8 +69,12 @@ server.port=8083
 logging.config=file:/path/to/log4j2.xml
 
 # Artifact Downloader Configuration
-artifact.downloader.repoBaseUrl=https://development.adaptris.net/nexus/content/repositories/
+artifact.downloader.nexusBaseUrl=https://nexus.adaptris.net/nexus
+artifact.downloader.indexUrl=${artifact.downloader.nexusBaseUrl}/service/local/lucene/search?repositoryId=${repository}&g=com.adaptris&v=${artifact.version}&p=jar
+artifact.downloader.repoBaseUrl=${artifact.downloader.nexusBaseUrl}/content/repositories/
 artifact.downloader.repos=public,releases,snapshots,thirdparty-snapshots
+artifact.downloader.repositoryReleases=releases
+artifact.downloader.repositorySnapshots=snapshots
 artifact.downloader.credentials.realm=
 artifact.downloader.credentials.host=
 artifact.downloader.credentials.username=
@@ -67,6 +82,13 @@ artifact.downloader.credentials.password=
 artifact.downloader.resolverLogLevel=warn
 artifact.downloader.destination=${user.home}
 artifact.downloader.excludes=com.adaptris:adp-core,com.adaptris:interlok-core,com.adaptris:adp-core-apt,com.adaptris:interlok-core-apt,com.adaptris:adp-stubs,com.adaptris:interlok-stubs,com.adaptris:interlok-common,com.sun*,javax.servlet*,org.slf4j*,org.apache.log4j*,log4j*,commons-logging:commons-logging,maven-plugins
+
+artifact.downloader.unwanted=interlok,adapter-web-gui,interlok-core,interlok-core-apt,interlok-boot,jaxrs-client-proxy,interlok-client,interlok-client-jmx,interlok-common,interlok-logging,interlok-ui-swagger-codegen
+
+artifact.downloader.indexArtifactIdXpath=/searchNGResponse/data/artifact/artifactId/text()
+
+interlok.starter.baseFilesystemUrlNightly=https://development.adaptris.net/nightly_builds/v3.x/${today}/base-filesystem.zip
+
 
 ```
 
