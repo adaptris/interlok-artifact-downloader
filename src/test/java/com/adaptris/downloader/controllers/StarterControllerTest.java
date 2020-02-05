@@ -2,9 +2,9 @@ package com.adaptris.downloader.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,7 +31,6 @@ import org.mockito.Spy;
 import com.adaptris.downloader.config.ArtifactDownloaderException;
 import com.adaptris.downloader.config.InterlokStarterProperties;
 import com.adaptris.downloader.resolvers.DependenciesResolverException;
-import com.adaptris.downloader.resources.ArtifactAndDependendencies;
 import com.adaptris.downloader.services.BuildGradleFileService;
 import com.adaptris.downloader.services.impl.BuildGradleFileServiceImpl;
 
@@ -71,7 +70,7 @@ public class StarterControllerTest {
 
     doThrow(new IOException("error")).when(buildGradleFileService).generate(eq(VERSION), argThat(new ArgumentMatcher<List<String>>() {
       @Override
-      public boolean matches(Object argument) {
+      public boolean matches(List<String> argument) {
         return List.class.cast(argument).contains("interlok-json");
       }
     }));
@@ -92,10 +91,10 @@ public class StarterControllerTest {
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(Response.class));
-    verify(asyncResponse).resume(argThat(new ArgumentMatcher<ArtifactAndDependendencies>() {
+    verify(asyncResponse).resume(argThat(new ArgumentMatcher<Response>() {
       @Override
-      public boolean matches(Object argument) {
-        assertValidResponse((Response) argument);
+      public boolean matches(Response argument) {
+        assertValidResponse(argument);
         return true;
       }
     }));
@@ -110,7 +109,7 @@ public class StarterControllerTest {
 
     doThrow(new IOException("error")).when(buildGradleFileService).generate(eq(VERSION), argThat(new ArgumentMatcher<List<String>>() {
       @Override
-      public boolean matches(Object argument) {
+      public boolean matches(List<String> argument) {
         return List.class.cast(argument).contains("interlok-json");
       }
     }));
@@ -121,7 +120,7 @@ public class StarterControllerTest {
 
     verify(asyncResponse).resume(argThat(new ArgumentMatcher<ArtifactDownloaderException>() {
       @Override
-      public boolean matches(Object argument) {
+      public boolean matches(ArtifactDownloaderException argument) {
         return ArtifactDownloaderException.class.cast(argument).getMessage().equals("Failed to generate gradle files");
       }
     }));
@@ -136,10 +135,10 @@ public class StarterControllerTest {
     Thread.sleep(400);
 
     verify(asyncResponse).resume(isA(Response.class));
-    verify(asyncResponse).resume(argThat(new ArgumentMatcher<ArtifactAndDependendencies>() {
+    verify(asyncResponse).resume(argThat(new ArgumentMatcher<Response>() {
       @Override
-      public boolean matches(Object argument) {
-        assertValidResponse((Response) argument);
+      public boolean matches(Response argument) {
+        assertValidResponse(argument);
         return true;
       }
     }));

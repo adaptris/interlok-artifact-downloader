@@ -1,14 +1,13 @@
 package com.adaptris.downloader.resolvers.ivy;
 
-import org.junit.Assert;
-import org.junit.Rule;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class IvyMavenLikePatternMatcherTest {
-
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void testMatchesAll() {
@@ -16,7 +15,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("").matches("com.adaptris:artifact");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -25,7 +24,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*").matches("com.adaptris:artifact");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -34,7 +33,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris:artifact").matches("com.adaptris:artifact");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -43,7 +42,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris").matches("com.adaptris");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -52,7 +51,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris*").matches("com.adaptris:artifact");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -61,7 +60,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*com.adaptris").matches("com.adaptris");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -70,7 +69,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*com.adaptris*").matches("com.adaptris");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -79,7 +78,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris*").matches("com.adaptris.ui");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -88,7 +87,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*adaptris.ui").matches("com.adaptris.ui");
 
-    Assert.assertTrue(matches);
+    assertTrue(matches);
   }
 
   @Test
@@ -97,7 +96,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris").matches("com.adaptris.ui");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -106,7 +105,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris*").matches("com.adapt");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -115,7 +114,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("com.adaptris*").matches("org.something");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -124,7 +123,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*adaptris").matches("org.something");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -133,7 +132,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("*adaptris*").matches("org.something");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -142,7 +141,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("(com.adaptris:artifact:1,com.adaptris:artifact:2)").matches("com.adaptris:artifact:1");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
@@ -151,16 +150,16 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean matches = patternMatcher.getMatcher("[com.adaptris:artifact:1,com.adaptris:artifact:2]").matches("com.adaptris:artifact:1");
 
-    Assert.assertFalse(matches);
+    assertFalse(matches);
   }
 
   @Test
   public void testMatchesNull() {
-    expectedEx.expect(NullPointerException.class);
-
     IvyMavenLikePatternMatcher patternMatcher = new IvyMavenLikePatternMatcher();
 
-    patternMatcher.getMatcher("com.adaptris").matches(null);
+    assertThrows(NullPointerException.class, () -> {
+      patternMatcher.getMatcher("com.adaptris").matches(null);
+    });
   }
 
   @Test
@@ -169,7 +168,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     String name = patternMatcher.getName();
 
-    Assert.assertEquals(IvyMavenLikePatternMatcher.IVY_MAVEN_LIKE, name);
+    assertEquals(IvyMavenLikePatternMatcher.IVY_MAVEN_LIKE, name);
   }
 
   @Test
@@ -178,7 +177,7 @@ public class IvyMavenLikePatternMatcherTest {
 
     boolean exact = patternMatcher.getMatcher("com.adaptris.*").isExact();
 
-    Assert.assertFalse(exact);
+    assertFalse(exact);
   }
 
 }

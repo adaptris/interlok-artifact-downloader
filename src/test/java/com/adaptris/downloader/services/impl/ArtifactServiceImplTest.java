@@ -1,5 +1,8 @@
 package com.adaptris.downloader.services.impl;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -12,12 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -39,9 +38,6 @@ public class ArtifactServiceImplTest {
   private static final String VERSION = "version";
   private static final String GROUP_ARTIFACT_VERSION = "com.adaptris-artifact-version";
   private static final String EXCLUDE_ARTIFACT = "com.adaptris:exclude";
-
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
   private ArtifactDownloaderProperties properties;
@@ -65,8 +61,8 @@ public class ArtifactServiceImplTest {
 
     List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
 
-    Assert.assertEquals(1, artifacts.size());
-    Assert.assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
+    assertEquals(1, artifacts.size());
+    assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
@@ -79,57 +75,54 @@ public class ArtifactServiceImplTest {
 
     List<File> artifacts = artifactService.download(GROUP, ARTIFACT, VERSION, null, false, EXCLUDE_ARTIFACT);
 
-    Assert.assertEquals(1, artifacts.size());
-    Assert.assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
+    assertEquals(1, artifacts.size());
+    assertEquals(GROUP_ARTIFACT_VERSION, artifacts.get(0).getName());
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false, EXCLUDE_ARTIFACT);
   }
 
   @Test
   public void testDownloadFails() throws DependenciesResolverException, ArtifactDownloaderException {
-    expectedEx.expect(ArtifactDownloaderException.class);
-    expectedEx.expectCause(IsInstanceOf.<Throwable>instanceOf(DependenciesResolverException.class));
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doThrow(new DependenciesResolverException(new IOException("error"))).when(dependenciesResolver).resolveArtifacts(GROUP,
         ARTIFACT, VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    ArtifactDownloaderException exception = assertThrows(ArtifactDownloaderException.class, () -> {
+      artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    });
+    assertTrue(exception.getCause() instanceof DependenciesResolverException);
 
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadFailsInvalidGroupId() throws DependenciesResolverException, ArtifactDownloaderException {
-    expectedEx.expect(InvalidGroupIdDownloaderException.class);
-    expectedEx.expectMessage("[com.invalid] is not a valid group Id. It need to start with [com.adaptris]");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download("com.invalid", ARTIFACT, VERSION, null, false, null);
+    ArtifactDownloaderException exception = assertThrows(InvalidGroupIdDownloaderException.class, () -> {
+      artifactService.download("com.invalid", ARTIFACT, VERSION, null, false, null);
+    });
+    assertEquals("[com.invalid] is not a valid group Id. It need to start with [com.adaptris]", exception.getMessage());
 
     verify(dependenciesResolver, never()).resolveArtifacts("com.invalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadFailsInvalidGroupIdTwo() throws DependenciesResolverException, ArtifactDownloaderException {
-    expectedEx.expect(InvalidGroupIdDownloaderException.class);
-    expectedEx.expectMessage("[com.adaptrisinvalid] is not a valid group Id. It need to start with [com.adaptris]");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download("com.adaptrisinvalid", ARTIFACT, VERSION, null, false, null);
+    ArtifactDownloaderException exception = assertThrows(InvalidGroupIdDownloaderException.class, () -> {
+      artifactService.download("com.adaptrisinvalid", ARTIFACT, VERSION, null, false, null);
+    });
+    assertEquals("[com.adaptrisinvalid] is not a valid group Id. It need to start with [com.adaptris]", exception.getMessage());
 
     verify(dependenciesResolver, never()).resolveArtifacts("com.adaptrisinvalid", ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadFailsWithUnresolveDependencyNotFound() throws DependenciesResolverException, ArtifactDownloaderException {
-    expectedEx.expect(ArtifactUnresolvedDownloaderException.class);
-    expectedEx.expectMessage("Artifact could not be resolved");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("unresolved dependency: com.adaptris:artifact:version: not found");
@@ -137,16 +130,16 @@ public class ArtifactServiceImplTest {
         VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    ArtifactDownloaderException exception = assertThrows(ArtifactUnresolvedDownloaderException.class, () -> {
+      artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    });
+    assertEquals("Artifact could not be resolved", exception.getMessage());
 
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }
 
   @Test
   public void testDownloadFailsWithDownloadFailed() throws DependenciesResolverException, ArtifactDownloaderException {
-    expectedEx.expect(ArtifactUnresolvedDownloaderException.class);
-    expectedEx.expectMessage("[download failed: com.adaptris:artifact:version]");
-
     DependenciesResolver dependenciesResolver = mock(DependenciesResolver.class);
     List<String> dependencyErrors = new ArrayList<>();
     dependencyErrors.add("download failed: com.adaptris:artifact:version");
@@ -154,7 +147,10 @@ public class ArtifactServiceImplTest {
         VERSION, null, getCacheDir(), false);
     doReturn(dependenciesResolver).when(dependenciesResolverFactory).getResolver();
 
-    artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    ArtifactDownloaderException exception = assertThrows(ArtifactUnresolvedDownloaderException.class, () -> {
+      artifactService.download(GROUP, ARTIFACT, VERSION, null, false, null);
+    });
+    assertEquals("[download failed: com.adaptris:artifact:version]", exception.getMessage());
 
     verify(dependenciesResolver).resolveArtifacts(GROUP, ARTIFACT, VERSION, null, getCacheDir(), false);
   }

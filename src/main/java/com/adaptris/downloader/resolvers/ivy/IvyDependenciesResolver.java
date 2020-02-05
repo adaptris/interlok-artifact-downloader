@@ -290,7 +290,6 @@ public class IvyDependenciesResolver implements DependenciesResolver {
     return retrievedDir;
   }
 
-  @SuppressWarnings("unchecked")
   protected final void handleErrors(ResolveReport report) throws DependenciesResolverException {
     if (report.hasError()) {
       List<String> dependencyErrors = new ArrayList<>(report.getProblemMessages());

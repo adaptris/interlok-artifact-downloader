@@ -1,6 +1,8 @@
 package com.adaptris.downloader.config;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.Test;
 
 public class InterlokStarterPropertiesTest {
@@ -9,7 +11,7 @@ public class InterlokStarterPropertiesTest {
   public void testNew() {
     InterlokStarterProperties properties = new InterlokStarterProperties();
 
-    Assert.assertNull(properties.getBaseFilesystemUrlNightly());
+    assertNull(properties.getBaseFilesystemUrlNightly());
   }
 
   @Test
@@ -17,7 +19,7 @@ public class InterlokStarterPropertiesTest {
     InterlokStarterProperties properties = new InterlokStarterProperties();
     properties.setBaseFilesystemUrlNightly("https://development.adaptris.net/nightly_builds/v3.x/${today}/base-filesystem.zip");
 
-    Assert.assertEquals("https://development.adaptris.net/nightly_builds/v3.x/${today}/base-filesystem.zip",
+    assertEquals("https://development.adaptris.net/nightly_builds/v3.x/${today}/base-filesystem.zip",
         properties.getBaseFilesystemUrlNightly());
   }
 
