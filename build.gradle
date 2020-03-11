@@ -20,7 +20,7 @@ ext {
   jacksonDatabindVersion = "2.10.3"
   swaggerVersion = "1.6.0"
   ivyVersion = "2.5.0"
-  mockitoVersion = "3.2.4"
+  mockitoVersion = "3.3.0"
 }
 
 run.enabled = false
