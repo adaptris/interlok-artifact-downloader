@@ -102,7 +102,7 @@ dependencies {
   compile "io.swagger:swagger-core:$swaggerVersion"
   compile "io.swagger:swagger-jersey2-jaxrs:$swaggerVersion"
 
-  compile "org.apache.commons:commons-lang3:3.9"
+  compile "org.apache.commons:commons-lang3:3.10"
   compile "commons-io:commons-io:2.6"
 
   compile "org.apache.ivy:ivy:$ivyVersion"
