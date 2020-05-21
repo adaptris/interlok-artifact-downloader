@@ -31,11 +31,12 @@ import com.adaptris.downloader.services.BuildGradleFileService;
 import com.adaptris.downloader.services.BuildGradleFileService.GradleItem;
 import com.adaptris.downloader.utils.ZipUtils;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
-@Api(tags = "starter")
+@Tags(@Tag(name = "starter"))
 @Path("/starter")
 @Controller
 public class StarterController extends AbstractController {
@@ -51,9 +52,9 @@ public class StarterController extends AbstractController {
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Produces({ APPLICATION_ZIP })
   @Path("generate/{version}/sync")
-  @ApiOperation(value = "List the available interlok arficat for a given version.")
-  public Response generateSync(@ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = ARTIFACTS, value = ARTIFACTS_DESC) @QueryParam(ARTIFACTS) List<String> artifacts)
+  @Operation(description = "List the available interlok arficat for a given version.")
+  public Response generateSync(@Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = ARTIFACTS, description = ARTIFACTS_DESC) @QueryParam(ARTIFACTS) List<String> artifacts)
           throws ArtifactDownloaderException {
 
     return doGenerate(version, getFullArtifactList(artifacts));
@@ -63,9 +64,9 @@ public class StarterController extends AbstractController {
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Produces({ APPLICATION_ZIP })
   @Path("generate/{version}")
-  @ApiOperation(value = "List the available interlok arficat for a given version.")
-  public void generateAsync(@ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = ARTIFACTS, value = ARTIFACTS_DESC) @QueryParam(ARTIFACTS) List<String> artifacts,
+  @Operation(description = "List the available interlok arficat for a given version.")
+  public void generateAsync(@Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = ARTIFACTS, description = ARTIFACTS_DESC) @QueryParam(ARTIFACTS) List<String> artifacts,
       @Suspended final AsyncResponse asyncResponse)
           throws ArtifactDownloaderException {
 

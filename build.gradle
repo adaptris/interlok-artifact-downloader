@@ -5,8 +5,10 @@ plugins {
   id 'eclipse'
   id 'org.springframework.boot' version '2.2.7.RELEASE'
   id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-  id 'com.github.spotbugs' version '3.0.0'
+  id 'com.github.spotbugs' version '4.2.1'
+  id "org.owasp.dependencycheck" version "5.3.2.1"
 }
+
 ext {
   nexusBaseUrl = project.hasProperty("nexusBaseUrl") ? project.getProperty("nexusBaseUrl") : "https://nexus.adaptris.net/nexus"
   repoUsername = project.hasProperty("repoUsername") ? project.getProperty("repoUsername") : "unknown"
@@ -14,11 +16,11 @@ ext {
   componentName = "Interlok Artifact Downloader"
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
-  slf4jVersion = "1.7.26"
+  slf4jVersion = "1.7.30"
   springBootVersion = "2.2.7.RELEASE"
   jacksonVersion = "2.11.0"
   jacksonDatabindVersion = "2.11.0"
-  swaggerVersion = "1.6.1"
+  swaggerVersion = "2.1.2"
   ivyVersion = "2.5.0"
   mockitoVersion = "3.3.3"
 }
@@ -99,8 +101,8 @@ dependencies {
   compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
   compile "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion"
 
-  compile "io.swagger:swagger-core:$swaggerVersion"
-  compile "io.swagger:swagger-jersey2-jaxrs:$swaggerVersion"
+  compile "io.swagger.core.v3:swagger-core:$swaggerVersion"
+  compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
   compile "org.apache.commons:commons-lang3:3.10"
   compile "commons-io:commons-io:2.6"
@@ -125,25 +127,26 @@ jacocoTestReport {
   }
 }
 
-spotbugs {
-  // showProgress = "true"
+spotbugsMain {
   effort = "max"
+  reportLevel = "high"
+  // showProgress = "true"
   // Ignore failures?
   // ignoreFailures = false
-
-  // We only care about "high priority" issues...
-  reportLevel = "high"
+  reports {
+    xml {
+      enabled = false
+    }
+    html {
+      enabled = true
+    }
+  }
+  // includeFilter = new File("$rootDir/gradle/spotbugs-filter.xml")
+  // excludeFilter = new File("$rootDir/gradle/spotbugs-exclude.xml")
 }
 
 // disable spotbugsTests which checks our test code..
 spotbugsTest.enabled = false
-
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
-  reports {
-    xml.enabled = false
-    html.enabled = true
-  }
-}
 
 
 check.dependsOn jacocoTestReport
