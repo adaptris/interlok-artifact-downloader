@@ -33,11 +33,12 @@ import com.adaptris.downloader.services.ArtifactService;
 import com.adaptris.downloader.services.OptionalComponentsService;
 import com.adaptris.downloader.utils.ZipUtils;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
-@Api(tags = "artifacts")
+@Tags(@Tag(name = "artifacts"))
 @Path("/artifacts")
 @Controller
 public class ArtifactController extends AbstractController {
@@ -59,7 +60,7 @@ public class ArtifactController extends AbstractController {
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @ApiOperation(value = "Display usage")
+  @Operation(description = "Display usage")
   // @Path("")
   public Usage usage() {
     Usage usage = new Usage();
@@ -71,23 +72,23 @@ public class ArtifactController extends AbstractController {
   @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
   @Path("{version}")
-  @ApiOperation(value = "List the available interlok artifacts for a given version.")
-  public List<String> list(@ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version)
+  @Operation(description = "List the available interlok artifacts for a given version.")
+  public List<String> list(@Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version)
       throws ArtifactDownloaderException {
-      return optionalComponentsService.loadArtifacts(version);
+    return optionalComponentsService.loadArtifacts(version);
   }
 
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @ApiOperation(value = "Resolve the artifact and its dependencies. Normal synchronous request.")
+  @Operation(description = "Resolve the artifact and its dependencies. Normal synchronous request.")
   @Path("{group}/{artifact}/{version}/resolve/sync")
   public ArtifactAndDependendencies resolveSync(
-      @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
-      @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
-      @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
-      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
+      @Parameter(name = GROUP, description = GROUP_DESC) @PathParam(GROUP) String group,
+      @Parameter(name = ARTIFACT, description = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
+      @Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = OPTIONAL, description = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @Parameter(name = EXCLUDES, description = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
           throws ArtifactDownloaderException {
 
     ArtifactAndDependendencies doResolve = doResolve(group, artifact, version, optional, excludes);
@@ -97,14 +98,14 @@ public class ArtifactController extends AbstractController {
   @GET
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @ApiOperation(value = "Resolve the artifact and its dependencies. Asynchronous request.")
+  @Operation(description = "Resolve the artifact and its dependencies. Asynchronous request.")
   @Path("{group}/{artifact}/{version}/resolve")
   public void resolveAsync(
-      @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
-      @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
-      @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
-      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
+      @Parameter(name = GROUP, description = GROUP_DESC) @PathParam(GROUP) String group,
+      @Parameter(name = ARTIFACT, description = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
+      @Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = OPTIONAL, description = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @Parameter(name = EXCLUDES, description = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
       @Suspended final AsyncResponse asyncResponse) throws ArtifactDownloaderException {
 
     new Thread(new Runnable() {
@@ -124,13 +125,13 @@ public class ArtifactController extends AbstractController {
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({APPLICATION_ZIP})
   @Path("{group}/{artifact}/{version}/sync")
-  @ApiOperation(value = "Resolve and download a zip file with the artifact and its dependencies. Normal synchronous request.")
+  @Operation(description = "Resolve and download a zip file with the artifact and its dependencies. Normal synchronous request.")
   public Response downloadSync(
-      @ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
-      @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
-      @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
-      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
+      @Parameter(name = GROUP, description = GROUP_DESC) @PathParam(GROUP) String group,
+      @Parameter(name = ARTIFACT, description = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
+      @Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = OPTIONAL, description = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @Parameter(name = EXCLUDES, description = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes)
           throws ArtifactDownloaderException {
 
     Response doDownload = doDownload(group, artifact, version, optional, excludes);
@@ -141,12 +142,12 @@ public class ArtifactController extends AbstractController {
   @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
   @Produces({APPLICATION_ZIP})
   @Path("{group}/{artifact}/{version}")
-  @ApiOperation(value = "Resolve and download a zip file with the artifact and its dependencies. Asynchronous request.")
-  public void downloadAsync(@ApiParam(name = GROUP, value = GROUP_DESC) @PathParam(GROUP) String group,
-      @ApiParam(name = ARTIFACT, value = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
-      @ApiParam(name = VERSION, value = VERSION_DESC) @PathParam(VERSION) String version,
-      @ApiParam(name = OPTIONAL, value = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
-      @ApiParam(name = EXCLUDES, value = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
+  @Operation(description = "Resolve and download a zip file with the artifact and its dependencies. Asynchronous request.")
+  public void downloadAsync(@Parameter(name = GROUP, description = GROUP_DESC) @PathParam(GROUP) String group,
+      @Parameter(name = ARTIFACT, description = ARTIFACT_DESC) @PathParam(ARTIFACT) String artifact,
+      @Parameter(name = VERSION, description = VERSION_DESC) @PathParam(VERSION) String version,
+      @Parameter(name = OPTIONAL, description = OPTIONAL_DESC) @QueryParam(OPTIONAL) boolean optional,
+      @Parameter(name = EXCLUDES, description = EXCLUDES_DESC) @QueryParam(EXCLUDES) List<String> excludes,
       @Suspended final AsyncResponse asyncResponse)
           throws ArtifactDownloaderException {
 

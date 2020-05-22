@@ -38,7 +38,7 @@ By default a web application will be started and accessible on *http://localhost
 The web application has a simple UI with three text fields to enter the Interlok artifact group id (only com.adaptris and group starting with com.adaptris. are allowed), the artifact id and the version.
 
 It also has a rest api accessible at *http://localhost:8083/interlok-downloader/api/artifacts/{group}/{artifact}/{version}*.
-More details about the api can be found in the swagger file at *http://localhost:8083/interlok-downloader/api/swagger.json*.
+More details about the api can be found in the open api file at *http://localhost:8083/interlok-downloader/api/openapi.json*.
 
 ## Starter Usage
 
@@ -49,7 +49,7 @@ To access the Interlok starter page you have to click on the Interlok Starter me
 The web application has a simple UI with two text fields to enter the Interlok version and the list of artifacts id you want to have in the generated build.gradle file.
 
 It also has a rest api accessible at *http://localhost:8083/interlok-downloader/api/starter/generate/{version}?artifacts=interlok-..,interlok-...*.
-More details about the api can be found in the swagger file at *http://localhost:8083/interlok-downloader/api/swagger.json*.
+More details about the api can be found in the open api file at *http://localhost:8083/interlok-downloader/api/api/openapi.json*.
 
 ## Help
 
