@@ -20,7 +20,7 @@ ext {
   log4j2Version = "2.13.3"
   springBootVersion = "2.3.1.RELEASE"
   jacksonVersion = "2.11.0"
-  jacksonDatabindVersion = "2.11.0"
+  jacksonDatabindVersion = "2.11.1"
   swaggerVersion = "2.1.2"
   ivyVersion = "2.5.0"
   mockitoVersion = "3.3.3"
