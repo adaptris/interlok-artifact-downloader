@@ -18,7 +18,7 @@ ext {
   organizationUrl = "https://www.adaptris.com"
   slf4jVersion = "1.7.30"
   log4j2Version = "2.13.3"
-  jacksonVersion = "2.11.1"
+  jacksonVersion = "2.11.2"
   jacksonDatabindVersion = "2.11.2"
   swaggerVersion = "2.1.4"
   ivyVersion = "2.5.0"
