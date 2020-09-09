@@ -3,9 +3,9 @@ plugins {
   id 'application'
   id 'jacoco'
   id 'eclipse'
-  id 'org.springframework.boot' version '2.3.1.RELEASE'
-  id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-  id 'com.github.spotbugs' version '4.2.3'
+  id 'org.springframework.boot' version '2.3.3.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+  id 'com.github.spotbugs' version '4.5.0'
   id "org.owasp.dependencycheck" version "5.3.2.1"
 }
 
@@ -18,13 +18,15 @@ ext {
   organizationUrl = "https://www.adaptris.com"
   slf4jVersion = "1.7.30"
   log4j2Version = "2.13.3"
-  springBootVersion = "2.3.1.RELEASE"
-  jacksonVersion = "2.11.0"
-  jacksonDatabindVersion = "2.11.0"
-  swaggerVersion = "2.1.2"
+  jacksonVersion = "2.11.2"
+  jacksonDatabindVersion = "2.11.2"
+  swaggerVersion = "2.1.4"
   ivyVersion = "2.5.0"
-  mockitoVersion = "3.3.3"
+  mockitoVersion = "3.5.10"
 }
+
+// Override spring boot dependencies versions
+ext["jersey.version"] = "2.31"
 
 run.enabled = false
 distTar.enabled=false
@@ -32,7 +34,7 @@ distZip.enabled=false
 
 sourceCompatibility = 1.8
 group   = "com.adaptris"
-version = "1.0.2-RELEASE" // Should we follow interlok versions?
+version = "1.0.3-RELEASE" // Should we follow interlok versions?
 
 repositories {
   mavenCentral()
@@ -87,10 +89,10 @@ sourceSets {
 
 dependencies {
   compile "org.springframework.boot:spring-boot-devtools"
-  compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-  compile "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
-  compile("org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion")
-  compile "org.springframework.boot:spring-boot-starter-jersey:$springBootVersion"
+  compile "org.springframework.boot:spring-boot-starter-web"
+  compile "org.springframework.boot:spring-boot-starter-log4j2"
+  compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+  compile "org.springframework.boot:spring-boot-starter-jersey"
 
   compile "com.google.guava:guava:29.0-jre"
 
@@ -113,12 +115,12 @@ dependencies {
   compile "io.swagger.core.v3:swagger-core:$swaggerVersion"
   compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
-  compile "org.apache.commons:commons-lang3:3.10"
+  compile "org.apache.commons:commons-lang3:3.11"
   compile "commons-io:commons-io:2.7"
 
   compile "org.apache.ivy:ivy:$ivyVersion"
 
-  testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+  testCompile("org.springframework.boot:spring-boot-starter-test")
   testCompile "org.hamcrest:hamcrest-core:2.2"
   testCompile "junit:junit:4.13"
   testCompile "org.mockito:mockito-core:$mockitoVersion"
