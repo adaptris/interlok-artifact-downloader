@@ -114,14 +114,3 @@ workflows:
   on_commit:
     jobs:
       - build
-
-  nightly:
-    triggers:
-      - schedule:
-          cron: "00 06 * * *"
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
-      - build
