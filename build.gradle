@@ -122,7 +122,7 @@ dependencies {
 
   testCompile("org.springframework.boot:spring-boot-starter-test")
   testCompile "org.hamcrest:hamcrest-core:2.2"
-  testCompile "junit:junit:4.13"
+  testCompile "junit:junit:4.13.1"
   testCompile "org.mockito:mockito-core:$mockitoVersion"
   testCompile "org.mockito:mockito-inline:$mockitoVersion"
 }
