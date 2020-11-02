@@ -22,7 +22,7 @@ ext {
   jacksonDatabindVersion = "2.11.3"
   swaggerVersion = "2.1.5"
   ivyVersion = "2.5.0"
-  mockitoVersion = "3.5.13"
+  mockitoVersion = "3.6.0"
 }
 
 // Override spring boot dependencies versions
