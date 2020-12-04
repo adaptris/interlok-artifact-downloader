@@ -1,10 +1,10 @@
 package com.adaptris.downloader.resolvers.ivy;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -34,7 +34,7 @@ import org.apache.ivy.util.MessageLogger;
 import org.apache.ivy.util.url.CredentialsStore;
 import org.apache.ivy.util.url.URLHandlerDispatcher;
 import org.apache.ivy.util.url.URLHandlerRegistry;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import com.adaptris.downloader.config.ArtifactDownloaderCredentialsProperties;
@@ -155,7 +155,7 @@ public class IvyDependenciesResolverTest {
     properties.setCredentials(credentialsProperties);
     IvyDependenciesResolver resolver = new IvyDependenciesResolver(properties);
 
-    assertFalse("This host should not have any credentials yet", CredentialsStore.INSTANCE.hasCredentials("base-repo"));
+    assertFalse(CredentialsStore.INSTANCE.hasCredentials("base-repo"), "This host should not have any credentials yet");
 
     IvySettings ivySettings = new IvySettings();
     resolver.addRepos(null, ivySettings);

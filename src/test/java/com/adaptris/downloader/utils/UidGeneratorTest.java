@@ -1,15 +1,17 @@
 package com.adaptris.downloader.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
 
 public class UidGeneratorTest {
 
   @Test
   public void testGetUUID() throws Exception {
     String uuid = UidGenerator.getUUID();
-    Assert.assertNotNull(uuid);
-    Assert.assertEquals(5, uuid.split("-").length);
+    assertNotNull(uuid);
+    assertEquals(5, uuid.split("-").length);
   }
 
 }

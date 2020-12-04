@@ -1,42 +1,44 @@
 package com.adaptris.downloader.utils;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CollectionUtilsTest {
 
   @Test
   public void testListIsEmptyTrue() throws Exception {
-    Assert.assertTrue(CollectionUtils.isEmpty(Collections.emptyList()));
+    assertTrue(CollectionUtils.isEmpty(Collections.emptyList()));
   }
 
   @Test
   public void testListIsEmptyNull() throws Exception {
-    Assert.assertTrue(CollectionUtils.isEmpty((List<String>) null));
+    assertTrue(CollectionUtils.isEmpty((List<String>) null));
   }
 
   @Test
   public void testListIsEmptyNotEmpty() throws Exception {
-    Assert.assertFalse(CollectionUtils.isEmpty(Collections.singletonList("value")));
+    assertFalse(CollectionUtils.isEmpty(Collections.singletonList("value")));
   }
 
   @Test
   public void testMapIsEmptyTrue() throws Exception {
-    Assert.assertTrue(CollectionUtils.isEmpty(Collections.emptyMap()));
+    assertTrue(CollectionUtils.isEmpty(Collections.emptyMap()));
   }
 
   @Test
   public void testMapIsEmptyNull() throws Exception {
-    Assert.assertTrue(CollectionUtils.isEmpty((Map<String, String>) null));
+    assertTrue(CollectionUtils.isEmpty((Map<String, String>) null));
   }
 
   @Test
   public void testMapIsEmptyNotEmpty() throws Exception {
-    Assert.assertFalse(CollectionUtils.isEmpty(Collections.singletonMap("key", "value")));
+    assertFalse(CollectionUtils.isEmpty(Collections.singletonMap("key", "value")));
   }
 
 }

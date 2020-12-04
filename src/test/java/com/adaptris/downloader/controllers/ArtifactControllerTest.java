@@ -1,7 +1,9 @@
 package com.adaptris.downloader.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -28,9 +30,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -72,7 +73,7 @@ public class ArtifactControllerTest {
   @InjectMocks
   private final ArtifactController artifactController = new ArtifactController();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     doReturn(".").when(properties).getDestination();
@@ -82,8 +83,8 @@ public class ArtifactControllerTest {
   public void testUsage() {
     Usage usage = artifactController.usage();
 
-    Assert.assertNotNull(usage);
-    Assert.assertEquals("/{group}/{artifact}/{version}", usage.getLink());
+    assertNotNull(usage);
+    assertEquals("/{group}/{artifact}/{version}", usage.getLink());
   }
 
   @Test
@@ -92,8 +93,8 @@ public class ArtifactControllerTest {
 
     List<String> artifacts = artifactController.list(VERSION);
 
-    Assert.assertNotNull(artifacts);
-    Assert.assertEquals(Collections.singletonList("interlok-json"), artifacts);
+    assertNotNull(artifacts);
+    assertEquals(Collections.singletonList("interlok-json"), artifacts);
   }
 
   @Test
@@ -403,22 +404,22 @@ public class ArtifactControllerTest {
   }
 
   private void assertValidArtifactAndDependendencies(ArtifactAndDependendencies artifactAndDependendencies) {
-    Assert.assertNotNull(artifactAndDependendencies);
-    Assert.assertEquals(ARTIFACT + ".jar", artifactAndDependendencies.getArtifact());
-    Assert.assertEquals(1, artifactAndDependendencies.getDependencies().size());
-    Assert.assertEquals("dependency.jar", artifactAndDependendencies.getDependencies().get(0));
+    assertNotNull(artifactAndDependendencies);
+    assertEquals(ARTIFACT + ".jar", artifactAndDependendencies.getArtifact());
+    assertEquals(1, artifactAndDependendencies.getDependencies().size());
+    assertEquals("dependency.jar", artifactAndDependendencies.getDependencies().get(0));
   }
 
   private void assertValidResponse(Response response) {
-    Assert.assertNotNull(response);
-    Assert.assertEquals(200, response.getStatus());
-    Assert.assertEquals(MediaType.valueOf("application/zip"), response.getMediaType());
-    Assert.assertEquals("attachment; filename=\"" + ARTIFACT + "-" + VERSION + ".zip\"",
+    assertNotNull(response);
+    assertEquals(200, response.getStatus());
+    assertEquals(MediaType.valueOf("application/zip"), response.getMediaType());
+    assertEquals("attachment; filename=\"" + ARTIFACT + "-" + VERSION + ".zip\"",
         response.getHeaderString(HttpHeaders.CONTENT_DISPOSITION));
     // Check the files are in the response byte array
     String baosString = new String((byte[]) response.getEntity());
-    Assert.assertTrue(baosString.contains("artifact.jar"));
-    Assert.assertTrue(baosString.contains("dependency.jar"));
+    assertTrue(baosString.contains("artifact.jar"));
+    assertTrue(baosString.contains("dependency.jar"));
   }
 
 }

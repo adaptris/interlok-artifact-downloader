@@ -1,7 +1,9 @@
 package com.adaptris.downloader.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -19,9 +21,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,7 +46,7 @@ public class StarterControllerTest {
   @InjectMocks
   private final StarterController starterController = new StarterController();
 
-  @Before
+  @BeforeEach
   public void setUp() {
     MockitoAnnotations.initMocks(this);
   }
@@ -145,15 +146,15 @@ public class StarterControllerTest {
   }
 
   private void assertValidResponse(Response response) {
-    Assert.assertNotNull(response);
-    Assert.assertEquals(200, response.getStatus());
-    Assert.assertEquals(MediaType.valueOf("application/zip"), response.getMediaType());
-    Assert.assertEquals("attachment; filename=\"" + StarterController.INTERLOK_GRADLE_FILES + VERSION + ".zip\"",
+    assertNotNull(response);
+    assertEquals(200, response.getStatus());
+    assertEquals(MediaType.valueOf("application/zip"), response.getMediaType());
+    assertEquals("attachment; filename=\"" + StarterController.INTERLOK_GRADLE_FILES + VERSION + ".zip\"",
         response.getHeaderString(HttpHeaders.CONTENT_DISPOSITION));
     // Check the files are in the response byte array
     String baosString = new String((byte[]) response.getEntity());
-    Assert.assertTrue(baosString.contains("build.gradle"));
-    Assert.assertTrue(baosString.contains("gradle.properties"));
+    assertTrue(baosString.contains("build.gradle"));
+    assertTrue(baosString.contains("gradle.properties"));
   }
 
 }
