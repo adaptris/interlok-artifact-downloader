@@ -1,14 +1,14 @@
 package com.adaptris.downloader.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 public class ExcludesUtilsTest {
 
@@ -27,9 +27,9 @@ public class ExcludesUtilsTest {
     excludesToAdd.add("*:toexclude");
     ExcludesUtils.addToExcludesList(excludesToAdd, excludes);
 
-    Assert.assertEquals(excludesToAdd.size(), excludes.size());
-    Assert.assertEquals(excludesToAdd.get(0), excludes.get(0));
-    Assert.assertEquals(excludesToAdd.get(1), excludes.get(1));
+    assertEquals(excludesToAdd.size(), excludes.size());
+    assertEquals(excludesToAdd.get(0), excludes.get(0));
+    assertEquals(excludesToAdd.get(1), excludes.get(1));
   }
 
   @Test
@@ -41,8 +41,8 @@ public class ExcludesUtilsTest {
     excludesToAdd.add(libDir.getAbsolutePath());
     ExcludesUtils.addToExcludesList(excludesToAdd, excludes);
 
-    Assert.assertEquals(1, excludes.size());
-    Assert.assertEquals("*:adp-core-dummy", excludes.get(0));
+    assertEquals(1, excludes.size());
+    assertEquals("*:adp-core-dummy", excludes.get(0));
   }
 
   @Test
@@ -52,9 +52,9 @@ public class ExcludesUtilsTest {
     String excludesToAdd = "com.adaptris:toexclude,*:toexclude";
     ExcludesUtils.addToExcludesList(excludesToAdd, excludes);
 
-    Assert.assertEquals(2, excludes.size());
-    Assert.assertEquals("com.adaptris:toexclude", excludes.get(0));
-    Assert.assertEquals("*:toexclude", excludes.get(1));
+    assertEquals(2, excludes.size());
+    assertEquals("com.adaptris:toexclude", excludes.get(0));
+    assertEquals("*:toexclude", excludes.get(1));
   }
 
   @Test
@@ -65,8 +65,8 @@ public class ExcludesUtilsTest {
     String excludesToAdd = libDir.getAbsolutePath();
     ExcludesUtils.addToExcludesList(excludesToAdd, excludes);
 
-    Assert.assertEquals(1, excludes.size());
-    Assert.assertEquals("*:adp-core-dummy", excludes.get(0));
+    assertEquals(1, excludes.size());
+    assertEquals("*:adp-core-dummy", excludes.get(0));
   }
 
 }
