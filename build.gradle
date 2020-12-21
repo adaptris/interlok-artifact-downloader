@@ -96,7 +96,7 @@ dependencies {
   compile "org.springframework.boot:spring-boot-starter-thymeleaf"
   compile "org.springframework.boot:spring-boot-starter-jersey"
 
-  compile "com.google.guava:guava:30.0-jre"
+  compile "com.google.guava:guava:30.1-jre"
 /*
   compile "org.slf4j:slf4j-api:$slf4jVersion"
 
