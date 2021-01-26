@@ -16,19 +16,17 @@ ext {
   componentName = "Interlok Artifact Downloader"
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
-  /*slf4jVersion = "1.7.30"
-  log4j2Version = "2.13.3"*/
   swaggerVersion = "2.1.6"
   ivyVersion = "2.5.0"
-  mockitoVersion = "3.6.28"
 }
 
 // Override spring boot dependencies versions
-// ext["tomcat.version"] = "9.0.40"
-// ext["jersey.version"] = "2.32"
+// ext["tomcat.version"] = "9.0.41"
+ext["jersey.version"] = "2.33"
 // ext["slf4j.version"] = "1.7.30"
 ext["log4j2.version"] = "2.14.0"
-ext["jackson-bom.version"] = "2.12.0"
+ext["jackson-bom.version"] = "2.12.1"
+ext["mockito.version"] = "3.7.0"
 
 run.enabled = false
 distTar.enabled=false
@@ -97,23 +95,6 @@ dependencies {
   compile "org.springframework.boot:spring-boot-starter-jersey"
 
   compile "com.google.guava:guava:30.1-jre"
-/*
-  compile "org.slf4j:slf4j-api:$slf4jVersion"
-
-  compile "org.apache.logging.log4j:log4j-core:$log4j2Version"
-  compile "org.apache.logging.log4j:log4j-1.2-api:$log4j2Version"
-  compile "org.apache.logging.log4j:log4j-jul:$log4j2Version"
-  compile "org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version"
-  compile "org.apache.logging.log4j:log4j-api:$log4j2Version"
-
-  compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-  compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-  compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
-  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:$jacksonVersion"
-  compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion"
-  compile "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion"
-*/
   compile "io.swagger.core.v3:swagger-core:$swaggerVersion"
   compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
@@ -123,10 +104,6 @@ dependencies {
   compile "org.apache.ivy:ivy:$ivyVersion"
 
   testCompile "org.springframework.boot:spring-boot-starter-test"
-  /*testCompile "org.hamcrest:hamcrest-core:2.2"
-  testCompile "junit:junit:4.13.1"
-  testCompile "org.mockito:mockito-core:$mockitoVersion"
-  testCompile "org.mockito:mockito-inline:$mockitoVersion"*/
 }
 
 startScripts {
