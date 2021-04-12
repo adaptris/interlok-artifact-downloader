@@ -7,3 +7,9 @@
 .copyright-date:after {
     content: "2020";
 }
+
+@media (max-height: 490px) {
+	#app > footer {
+	    position: relative;
+	}
+}
