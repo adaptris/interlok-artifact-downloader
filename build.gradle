@@ -34,7 +34,7 @@ distZip.enabled=false
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 group   = "com.adaptris"
-version = "1.0-SNAPSHOT" // Should we follow interlok versions?
+version = "1.0.5-RELEASE" // Should we follow interlok versions?
 
 repositories {
   mavenCentral()
