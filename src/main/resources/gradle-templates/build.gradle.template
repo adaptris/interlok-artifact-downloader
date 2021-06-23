@@ -4,38 +4,34 @@ plugins {
 
 ext {
   interlokVersion = project.hasProperty("interlokVersion") ? project.getProperty("interlokVersion") : "NEED interlokVersion PROPERTY"
-  interlokUiVersion = interlokVersion
+  interlokUiVersion = interlokVersion 
+  
   interlokUrlVersion = interlokVersion.replace("-RELEASE", "")
-  interlokBuildParentVersion = interlokVersion.endsWith("-SNAPSHOT") ? "master" : interlokVersion
+  // interlokBuildParentVersion = interlokVersion.endsWith("-SNAPSHOT") ? "master" : interlokVersion
   // interlokParentGradle = "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/" + interlokBuildParentVersion + "/build.gradle"
-  interlokParentGradle = "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/master/build.gradle"
+  interlokParentGradle = "https://raw.githubusercontent.com/adaptris-labs/interlok-build-parent/1.6.0/build.gradle"
+  
   releaseInterlokBaseFilesystemUrl = "https://development.adaptris.net/installers/interlok/" + interlokUrlVersion + "/base-filesystem.zip"
   interlokBaseFilesystemUrl = project.hasProperty("interlokBaseFilesystemUrl") ? project.getProperty("interlokBaseFilesystemUrl") : releaseInterlokBaseFilesystemUrl
-  additionalNexusBaseUrl = project.hasProperty("additionalNexusBaseUrl") ? project.getProperty("additionalNexusBaseUrl") :  ""
+  
+  additionalNexusBaseUrl = project.findProperty("additionalNexusBaseUrl") ?: ""
   srcInterlokDir = "src/main/interlok/"
 }
 
 repositories {
 	if (project.hasProperty("additionalNexusBaseUrl")) {
-    	maven { url "${additionalNexusBaseUrl}/nexus/content/groups/public" }
-    	maven { url "${additionalNexusBaseUrl}/nexus/content/groups/interlok" }
+    maven { url "${additionalNexusBaseUrl}" }
     }
 }
 
-configurations {
-    interlokRuntime{}
-    interlokTestRuntime{}
-    interlokJavadocs{}
+allprojects {
+  apply from: "${interlokParentGradle}"
 }
 
 dependencies {
 #{interlokRuntime}
 
 #{interlokJavadocs}
-}
-
-allprojects {
-  apply from: "${interlokParentGradle}"
 }
 
 /**
@@ -56,6 +52,10 @@ task downloadAndUnzipFile(dependsOn: downloadBaseFilesystemZip, type: Copy) {
 task downloadAndUnzipFileAndCopyConfigDir(dependsOn: downloadAndUnzipFile, type: Copy) {
     from file(srcInterlokDir + "config/")
     into interlokTmpConfigDirectory
+
+  doLast {
+    ant.chmod(file: "$srcInterlokDir/bin/start-interlok", perm: "+x")
+  }
 }
 
 assemble.dependsOn downloadAndUnzipFileAndCopyConfigDir
