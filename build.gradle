@@ -4,9 +4,9 @@ plugins {
   id 'jacoco'
   id 'eclipse'
   id "org.owasp.dependencycheck" version "6.2.2"
-  id 'com.github.spotbugs' version '4.7.1'
+  id 'com.github.spotbugs' version '4.7.2'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-  id 'org.springframework.boot' version '2.5.1'
+  id 'org.springframework.boot' version '2.5.4'
 }
 
 ext {
@@ -16,7 +16,7 @@ ext {
   componentName = "Interlok Artifact Downloader"
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
-  swaggerVersion = "2.1.9"
+  swaggerVersion = "2.1.10"
   ivyVersion = "2.5.0"
 }
 
@@ -34,7 +34,7 @@ distZip.enabled=false
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 group   = "com.adaptris"
-version = "1.0.6-RELEASE" // Should we follow interlok versions?
+version = "1.0.7-RELEASE" // Should we follow interlok versions?
 
 repositories {
   mavenCentral()
@@ -99,7 +99,7 @@ dependencies {
   compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
   compile "org.apache.commons:commons-lang3:3.12.0"
-  compile "commons-io:commons-io:2.10.0"
+  compile "commons-io:commons-io:2.11.0"
 
   compile "org.apache.ivy:ivy:$ivyVersion"
 
