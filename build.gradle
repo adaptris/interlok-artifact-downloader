@@ -58,10 +58,8 @@ eclipse {
 }
 
 configurations {
-  compile {
-    exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-    exclude group: "org.springframework.boot", module: "spring-boot-starter-data-jpa"
-  }
+  all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-data-jpa"
 }
 
 // Use static classpath resources (i.e. in src/main/resources by default) in the live application when running bootRun.
@@ -81,11 +79,6 @@ jar {
                "Implementation-Vendor": organizationName,
                "Implementation-URL": organizationUrl
   }
-}
-
-sourceSets {
-  test.compileClasspath += configurations.compileOnly
-  test.runtimeClasspath += configurations.compileOnly
 }
 
 dependencies {
