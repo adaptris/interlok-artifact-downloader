@@ -4,7 +4,7 @@ plugins {
   id 'jacoco'
   id 'eclipse'
   id "org.owasp.dependencycheck" version "6.5.0.1"
-  id 'com.github.spotbugs' version '4.7.10'
+  id 'com.github.spotbugs' version '5.0.2'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'org.springframework.boot' version '2.6.1'
 }
@@ -21,12 +21,12 @@ ext {
 }
 
 // Override spring boot dependencies versions
-ext["tomcat.version"] = "9.0.54"
-ext["jersey.version"] = "2.33"
+ext["tomcat.version"] = "9.0.56"
+ext["jersey.version"] = "2.35"
 // ext["slf4j.version"] = "1.7.30"
-ext["log4j2.version"] = "2.14.0"
-ext["jackson-bom.version"] = "2.12.1"
-ext["mockito.version"] = "3.7.0"
+ext["log4j2.version"] = "2.15.0"
+ext["jackson-bom.version"] = "2.13.0"
+ext["mockito.version"] = "3.12.4"
 ext["thymeleaf.version"] = "3.0.13.RELEASE"
 
 run.enabled = false
@@ -35,7 +35,7 @@ distZip.enabled=false
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 group   = "com.adaptris"
-version = "1.0.8-RELEASE"
+version = "1.0.9-RELEASE"
 
 repositories {
   mavenCentral()
@@ -58,10 +58,8 @@ eclipse {
 }
 
 configurations {
-  compile {
-    exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-    exclude group: "org.springframework.boot", module: "spring-boot-starter-data-jpa"
-  }
+  all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-data-jpa"
 }
 
 // Use static classpath resources (i.e. in src/main/resources by default) in the live application when running bootRun.
@@ -83,28 +81,23 @@ jar {
   }
 }
 
-sourceSets {
-  test.compileClasspath += configurations.compileOnly
-  test.runtimeClasspath += configurations.compileOnly
-}
-
 dependencies {
-  compile "org.springframework.boot:spring-boot-devtools"
-  compile "org.springframework.boot:spring-boot-starter-web"
-  compile "org.springframework.boot:spring-boot-starter-log4j2"
-  compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-  compile "org.springframework.boot:spring-boot-starter-jersey"
+  implementation "org.springframework.boot:spring-boot-devtools"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation "org.springframework.boot:spring-boot-starter-log4j2"
+  implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+  implementation "org.springframework.boot:spring-boot-starter-jersey"
 
-  compile "com.google.guava:guava:31.0.1-jre"
-  compile "io.swagger.core.v3:swagger-core:$swaggerVersion"
-  compile "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
+  implementation "com.google.guava:guava:31.0.1-jre"
+  implementation "io.swagger.core.v3:swagger-core:$swaggerVersion"
+  implementation "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
-  compile "org.apache.commons:commons-lang3:3.12.0"
-  compile "commons-io:commons-io:2.11.0"
+  implementation "org.apache.commons:commons-lang3:3.12.0"
+  implementation "commons-io:commons-io:2.11.0"
 
-  compile "org.apache.ivy:ivy:$ivyVersion"
+  implementation "org.apache.ivy:ivy:$ivyVersion"
 
-  testCompile "org.springframework.boot:spring-boot-starter-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 startScripts {
