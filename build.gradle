@@ -24,7 +24,7 @@ ext {
 ext["tomcat.version"] = "9.0.56"
 ext["jersey.version"] = "2.35"
 // ext["slf4j.version"] = "1.7.30"
-ext["log4j2.version"] = "2.15.0"
+ext["log4j2.version"] = "2.16.0"
 ext["jackson-bom.version"] = "2.13.0"
 ext["mockito.version"] = "3.12.4"
 ext["thymeleaf.version"] = "3.0.13.RELEASE"
