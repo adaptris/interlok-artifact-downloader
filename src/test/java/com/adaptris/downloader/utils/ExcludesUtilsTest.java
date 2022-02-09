@@ -33,19 +33,6 @@ public class ExcludesUtilsTest {
   }
 
   @Test
-  public void testAddCollectionDir() throws URISyntaxException {
-    List<String> excludes = new ArrayList<>();
-
-    File libDir = new File(resource.toURI());
-    List<String> excludesToAdd = new ArrayList<>();
-    excludesToAdd.add(libDir.getAbsolutePath());
-    ExcludesUtils.addToExcludesList(excludesToAdd, excludes);
-
-    assertEquals(1, excludes.size());
-    assertEquals("*:adp-core-dummy", excludes.get(0));
-  }
-
-  @Test
   public void testAddString() {
     List<String> excludes = new ArrayList<>();
 
