@@ -21,12 +21,12 @@ ext {
 }
 
 // Override spring boot dependencies versions
-ext["tomcat.version"] = "9.0.58"
+ext["tomcat.version"] = "9.0.60"
 ext["jersey.version"] = "2.35"
 // ext["slf4j.version"] = "1.7.35"
-ext["log4j2.version"] = "2.17.1"
-ext["jackson-bom.version"] = "2.13.1"
-ext["mockito.version"] = "4.3.1"
+ext["log4j2.version"] = "2.17.2"
+ext["jackson-bom.version"] = "2.13.2"
+ext["mockito.version"] = "4.4.0"
 ext["thymeleaf.version"] = "3.0.15.RELEASE"
 
 run.enabled = false
