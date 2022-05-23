@@ -22,12 +22,12 @@ ext {
 }
 
 // Override spring boot dependencies versions
-ext["tomcat.version"] = "9.0.60"
+ext["tomcat.version"] = "9.0.63"
 ext["jersey.version"] = "2.35"
 // ext["slf4j.version"] = "1.7.35"
 ext["log4j2.version"] = "2.17.2"
 ext["jackson-bom.version"] = jacksonBomVersion
-ext["mockito.version"] = "4.4.0"
+ext["mockito.version"] = "4.5.1"
 ext["thymeleaf.version"] = "3.0.15.RELEASE"
 
 run.enabled = false
@@ -135,7 +135,7 @@ spotbugsMain {
 spotbugsTest.enabled = false
 
 dependencyCheck  {
-  suppressionFiles= [ "https://raw.githubusercontent.com/adaptris/interlok/develop/gradle/owasp-exclude.xml" ]
+  suppressionFiles= [ "https://raw.githubusercontent.com/adaptris/interlok/develop/gradle/owasp-exclude.xml", "$rootDir/gradle/owasp-exclude.xml" ]
   skipConfigurations = [ "antSql", "spotbugs", "umlDoclet", "offlineJavadocPackages", "javadoc", "jacocoAnt", "jacocoAgent" ]
   formats = [ "HTML", "JUNIT" ]
   junitFailOnCVSS = 7.0
