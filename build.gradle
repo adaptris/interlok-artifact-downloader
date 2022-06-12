@@ -36,7 +36,7 @@ distZip.enabled=false
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 group   = "com.adaptris"
-version = "1.0.11-RELEASE"
+version = "1.0-SNAPSHOT"
 
 repositories {
   mavenCentral()
