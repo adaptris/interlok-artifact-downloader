@@ -16,7 +16,7 @@ ext {
   componentName = "Interlok Artifact Downloader"
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
-  swaggerVersion = "2.2.9"
+  swaggerVersion = "2.2.10"
   ivyVersion = "2.5.1"
   jacksonBomVersion = "2.15.1"
 }
