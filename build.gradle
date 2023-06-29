@@ -90,7 +90,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
   implementation "org.springframework.boot:spring-boot-starter-jersey"
 
-  implementation "com.google.guava:guava:32.0.1-jre"
+  implementation "com.google.guava:guava:32.1.0-jre"
   implementation (platform("com.fasterxml.jackson:jackson-bom:$jacksonBomVersion"))
   implementation "io.swagger.core.v3:swagger-core:$swaggerVersion"
   implementation "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
