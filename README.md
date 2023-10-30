@@ -5,8 +5,6 @@
 [![Actions Status](https://github.com/adaptris/interlok-artifact-downloader/actions/workflows/gradle-check.yml/badge.svg)](https://github.com/adaptris/interlok-artifact-downloader/actions)
 [![CircleCI](https://circleci.com/gh/adaptris/interlok-artifact-downloader/tree/develop.svg?style=svg)](https://circleci.com/gh/adaptris/interlok-artifact-downloader/tree/develop)
 [![codecov](https://codecov.io/gh/adaptris/interlok-artifact-downloader/branch/develop/graph/badge.svg)](https://codecov.io/gh/adaptris/interlok-artifact-downloader)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/adaptris/interlok-artifact-downloader.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/adaptris/interlok-artifact-downloader/context:java)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/adaptris/interlok-artifact-downloader.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/adaptris/interlok/alerts/)
 
 Helper application that allows you to download Interlok artifacts from a nexus server.
 
