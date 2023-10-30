@@ -1,8 +1,8 @@
 # interlok-artifact-downloader 
 
 [![GitHub tag](https://img.shields.io/github/tag/adaptris/interlok-artifact-downloader.svg)](https://github.com/adaptris/interlok-artifact-downloader/tags)
-![license](https://img.shields.io/github/license/adaptris/interlok-artifact-downloader.svg) [![Build Status](https://travis-ci.org/adaptris/interlok-artifact-downloader.svg?branch=develop)](https://travis-ci.org/adaptris/interlok-artifact-downloader)
-[![Actions Status](https://github.com/adaptris/interlok-artifact-downloader/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/adaptris/interlok-artifact-downloader/actions)
+![license](https://img.shields.io/github/license/adaptris/interlok-artifact-downloader.svg)
+[![Actions Status](https://github.com/adaptris/interlok-artifact-downloader/actions/workflows/gradle-check.yml/badge.svg)](https://github.com/adaptris/interlok-artifact-downloader/actions)
 [![CircleCI](https://circleci.com/gh/adaptris/interlok-artifact-downloader/tree/develop.svg?style=svg)](https://circleci.com/gh/adaptris/interlok-artifact-downloader/tree/develop)
 [![codecov](https://codecov.io/gh/adaptris/interlok-artifact-downloader/branch/develop/graph/badge.svg)](https://codecov.io/gh/adaptris/interlok-artifact-downloader)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/adaptris/interlok-artifact-downloader.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/adaptris/interlok-artifact-downloader/context:java)
