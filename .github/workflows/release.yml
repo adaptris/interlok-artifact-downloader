@@ -43,7 +43,6 @@ jobs:
         run: ./gradlew -Djava.security.egd=file:/dev/./urandom -Dorg.gradle.console=plain --no-daemon -PverboseTests=true check assemble -PdownloaderVersion=${{ env.RELEASE_VERSION }}
       - name: Create Release
         run: |
-          ls ./build/distributions/
-          gh release create ${{ env.RELEASE_VERSION }} './build/distributions/interlok-artifact-downloader-boot-${{ env.RELEASE_VERSION }}.*'
+          gh release create ${{ env.RELEASE_VERSION }} './build/distributions/interlok-artifact-downloader-boot-${{ env.RELEASE_VERSION }}.tar' './build/distributions/interlok-artifact-downloader-boot-${{ env.RELEASE_VERSION }}.zip'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
