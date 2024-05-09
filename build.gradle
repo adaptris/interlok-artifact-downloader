@@ -19,7 +19,7 @@ ext {
   organizationUrl = "https://www.adaptris.com"
   swaggerVersion = "2.2.21"
   ivyVersion = "2.5.2"
-  jacksonBomVersion = "2.17.0"
+  jacksonBomVersion = "2.17.1"
 }
 
 // Override spring boot dependencies versions
