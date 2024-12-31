@@ -18,7 +18,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
   swaggerVersion = "2.2.27"
-  ivyVersion = "2.5.2"
+  ivyVersion = "2.5.3"
   jacksonBomVersion = "2.18.2"
 }
 
