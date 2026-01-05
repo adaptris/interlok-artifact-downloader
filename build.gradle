@@ -3,7 +3,7 @@ plugins {
   id 'application'
   id 'jacoco'
   id 'eclipse'
-  id "org.owasp.dependencycheck" version "8.2.1"
+  id "org.owasp.dependencycheck" version "12.1.1"
   id 'com.github.spotbugs' version '5.2.5'
   id 'io.spring.dependency-management' version '1.1.7'
   id 'org.springframework.boot' version '2.7.18'
@@ -17,7 +17,7 @@ ext {
   componentName = "Interlok Artifact Downloader"
   organizationName = "Adaptris Ltd"
   organizationUrl = "https://www.adaptris.com"
-  swaggerVersion = "2.2.27"
+  swaggerVersion = "2.2.35"
   ivyVersion = "2.5.3"
   jacksonBomVersion = "2.18.2"
 }
@@ -96,7 +96,7 @@ dependencies {
   implementation "io.swagger.core.v3:swagger-core:$swaggerVersion"
   implementation "io.swagger.core.v3:swagger-jaxrs2:$swaggerVersion"
 
-  implementation "org.apache.commons:commons-lang3:3.17.0"
+  implementation "org.apache.commons:commons-lang3:3.18.0"
   implementation "commons-io:commons-io:2.18.0"
 
   implementation "org.apache.ivy:ivy:$ivyVersion"
